@@ -1,0 +1,48 @@
+{
+    "name": "formoso",
+    "version": "0.0.1",
+    "description": "",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/esm/index.d.ts",
+    "scripts": {
+      "build": "npm run build:esm && npm run build:cjs",
+      "build:esm": "tsc",
+      "build:cjs": "tsc --module commonjs --outDir dist/cjs"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jonnsl/formoso.git"
+    },
+    "keywords": [
+      "react",
+      "input",
+      "ui",
+      "form",
+      "formbuilder"
+    ],
+    "files": [
+      "/dist"
+    ],
+    "author": "Jonnathan Soares Lima",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/jonnsl/formoso/issues"
+    },
+    "homepage": "https://github.com/jonnsl/formoso#readme",
+    "devDependencies": {
+      "@types/react": "^18.3.1",
+      "@types/react-dom": "^18.3.0",
+      "esbuild": "^0.23.1",
+      "react": "^18.3.1",
+      "react-dom": "^18.3.1",
+      "typescript": "^5.5.4"
+    },
+    "peerDependencies": {
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0"
+    },
+    "dependencies": {
+      "classnames": "^2.5.1"
+    }
+  }
