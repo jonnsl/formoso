@@ -1,2 +1,7 @@
 /node_modules
 package-lock.json
+gh-pages/app.js
+gh-pages/app.js.map
+gh-pages/app.css
+gh-pages/app.css.map
+gh-pages/bootstrap*

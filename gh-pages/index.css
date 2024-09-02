@@ -1,0 +1,235 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+@import url(../node_modules/bootstrap-icons/font/bootstrap-icons.css);
+body {
+  font-family: "Raleway", system-ui;
+  background-color: #f5f8fa;
+}
+
+@media (min-width: 992px) {
+  #app {
+    width: 970px
+  }
+}
+
+@media (min-width: 1200px) {
+  #app {
+    width: 1170px
+  }
+}
+
+#app {
+  margin: 22px auto;
+}
+
+.panel {
+  margin-bottom: 22px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+.panel-default {
+  border-color: #d3e0e9;
+}
+
+.panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.panel-default>.panel-heading {
+  color: #333;
+  background-color: #fff;
+  border-color: #d3e0e9;
+}
+
+.panel-body {
+  padding: 15px;
+}
+
+.side_panel_container {
+  padding: 0 25px;
+}
+
+.side_panel_container div {
+  transition: transform .35s ease-out 0s;
+}
+
+.side-panel {
+  text-align: center;
+  margin-top: -22px;
+}
+
+/**
+ * Section
+ */
+.section>.panel-heading,
+.section>.panel-body {
+  padding: 0;
+}
+
+.section-top-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.section-info {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  background: #3097d1;
+  padding: 5px;
+  color: #fff;
+}
+.section-info span {
+  margin-left: 5px;
+}
+.top-triangle {
+  position: absolute;
+  right: -16px;
+  width: 16px;
+  height: 34px;
+  top: 0;
+}
+.top-triangle svg {
+  height: 100%;
+  width: 100%;
+  fill: #3097d1;
+}
+.section-overflow-menu {
+  padding: 5px;
+}
+
+.section-title-input {
+  background: 0 0;
+  border: 0;
+  font-size: 18px;
+  margin: 0;
+  outline: 0;
+  padding: 10px 15px;
+  resize: none;
+  text-transform: uppercase;
+  vertical-align: top;
+  width: 100%;
+}
+
+.seamless {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin: 0;
+  outline: 0;
+  overflow: hidden;
+  padding-left: 5px;
+  padding: 0;
+  resize: none;
+  width: 100%;
+}
+
+/**
+ * Input
+ */
+.input:focus, .input:focus-within {
+  border-left: 3px solid #4a88fe;
+  padding-left: 12px;
+  box-shadow: 0 -2px 2px 0 rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .3);
+  outline: 0;
+  margin: 0;
+}
+.input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 15px 15px 15px;
+  background-color: #fff;
+}
+
+.grip-row {
+  text-align: center
+}
+.grip-row .grip svg {
+  transform: rotate(90deg)
+}
+.input .grip {
+  visibility: hidden;
+  pointer-events: none
+}
+
+.title-row {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  min-height: 36px;
+}
+.title-title {
+  padding-right: 15px;
+}
+.input:focus textarea.seamless,
+.input:focus-within textarea.seamless {
+  border-bottom-color: #eee;
+}
+.input:focus input[type=text].seamless:focus,
+.input:focus textarea.seamless:focus,
+.input:focus-within input[type=text].seamless:focus,
+.input:focus-within textarea.seamless:focus {
+  border-bottom-color: #3097d1;
+}
+.input:hover .grip-row .grip {
+  cursor: grab;
+  visibility: visible;
+  pointer-events: auto
+}
+
+.bottom-toolbar {
+  display: none;
+  text-align: right;
+  border-top: 1px solid #ddd;
+  padding-top: 5px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.input:focus .bottom-toolbar,
+.input:focus-within .bottom-toolbar {
+  display: flex;
+}
+.bottom-toolbar div:first-child {
+  flex-grow: 1;
+}
+.radio-required {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 1px solid #ccc;
+}
+
+.bottom-toolbar .overflow-menu {
+  display: inline-block;
+  margin-left: 5px;
+}
+.overflow-menu .overflow-btn:focus,
+.overflow-menu .overflow-btn:hover,
+.overflow-menu.open .overflow-btn {
+  background-color: #ccc;
+}
+.overflow-btn {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  margin-left: 5px;
+  background: 0 0;
+  border: none;
+  outline: 0;
+}
+.dropdown-toggle::after {
+  content: unset;
+}
+.checkable .bi {
+  visibility: hidden;
+  margin-right: 10px;
+}
+.checkable.checked .bi {
+  visibility: visible;
+}
