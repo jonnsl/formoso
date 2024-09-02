@@ -8,7 +8,8 @@
     "scripts": {
         "build": "npm run build:esm && npm run build:cjs",
         "build:esm": "tsc",
-        "build:cjs": "tsc --module commonjs --outDir dist/cjs"
+        "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+        "deploy": "gh-pages -d gh-pages"
     },
     "repository": {
         "type": "git",
@@ -34,6 +35,7 @@
         "@types/react": "^18.3.1",
         "@types/react-dom": "^18.3.0",
         "esbuild": "^0.23.1",
+        "gh-pages": "^6.1.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "typescript": "^5.5.4"
