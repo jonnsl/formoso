@@ -6223,6 +6223,43 @@ body {
   text-align: center;
   margin-top: -22px;
 }
+.form-page-topmenu {
+  margin-bottom: 5px;
+  min-height: 30px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.form-page-topmenu span {
+  display: inline;
+}
+.form-page-topmenu:hover span {
+  display: none;
+}
+.form-page-topmenu button {
+  display: none;
+}
+.form-page-topmenu:hover button {
+  display: inline-block;
+}
+.form-page-break {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.form-page-break button {
+  margin: 0 15px;
+}
+.form-page-break:before,
+.form-page-break:after {
+  content: "";
+  border-top: 2px dashed #cacaca;
+  flex-grow: 1;
+}
+.btn-seamless {
+  background-color: transparent;
+  border-color: transparent;
+}
 .section > .panel-heading,
 .section > .panel-body {
   padding: 0;

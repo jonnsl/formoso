@@ -24414,15 +24414,38 @@
       const onPageChange = (page2) => {
         onChange(replaceAt(pages, index3, page2));
       };
-      return /* @__PURE__ */ import_react10.default.createElement(
+      const removePage = () => {
+        onChange(remove(pages, index3));
+      };
+      const addNewPage = () => {
+        const newPages = splice(pages, index3 + 1, 0, emptyPage());
+        onChange(newPages);
+      };
+      const isLastRemainingPage = pages.length === 1;
+      return /* @__PURE__ */ import_react10.default.createElement("div", { className: "form-page-container", key: page.key }, !isLastRemainingPage ? /* @__PURE__ */ import_react10.default.createElement("div", { className: "form-page-topmenu" }, /* @__PURE__ */ import_react10.default.createElement("span", null, "Page ", index3 + 1), /* @__PURE__ */ import_react10.default.createElement(
+        "button",
+        {
+          type: "button",
+          className: "btn btn-light btn-sm btn-seamless",
+          onClick: removePage
+        },
+        "Remove Page"
+      )) : null, /* @__PURE__ */ import_react10.default.createElement(
         FormPage,
         {
-          key: page.key,
           page,
           onSectionFocus: handleActiveSectionChange,
           onChange: onPageChange
         }
-      );
+      ), /* @__PURE__ */ import_react10.default.createElement("div", { className: "form-page-break" }, /* @__PURE__ */ import_react10.default.createElement(
+        "button",
+        {
+          type: "button",
+          className: "btn btn-light btn-seamless",
+          onClick: addNewPage
+        },
+        "+ Add New Page"
+      )));
     };
     return /* @__PURE__ */ import_react10.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "col-md-11" }, pages.map(renderPage)), /* @__PURE__ */ import_react10.default.createElement("div", { className: "col-md-1 side_panel_container", ref: sideBarContainerRef }, /* @__PURE__ */ import_react10.default.createElement(
       "div",
