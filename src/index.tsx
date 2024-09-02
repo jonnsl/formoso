@@ -1,7 +1,7 @@
 
 import React, { ElementRef, ReactNode, useEffect, useRef, useState } from 'react'
-import FormPage, { Page } from './Page'
-import { replaceAt } from './Immutable'
+import FormPage, { emptyPage, Page } from './Page'
+import { remove, replaceAt, splice } from './Immutable'
 
 export type FormosoProps = {
   pages: Page[]
@@ -42,12 +42,43 @@ export default function Formoso(props: FormosoProps): ReactNode {
     const onPageChange = (page: Page): void => {
       onChange(replaceAt(pages, index, page))
     }
+    const removePage = () => {
+      onChange(remove(pages, index))
+    }
+
+    const addNewPage = () => {
+      const newPages = splice(pages, index + 1, 0, emptyPage())
+      onChange(newPages)
+    }
+
+    // const isFirstPage = index === 0
+    const isLastRemainingPage = pages.length === 1
+
     return (
-      <FormPage
-        key={page.key}
-        page={page}
-        onSectionFocus={handleActiveSectionChange}
-        onChange={onPageChange} />
+      <div className="form-page-container" key={page.key}>
+      { !isLastRemainingPage ?
+        <div className="form-page-topmenu">
+          <span>Page { index + 1 }</span>
+          <button
+            type="button"
+            className="btn btn-light btn-sm btn-seamless"
+            onClick={removePage}>
+              Remove Page
+          </button>
+        </div> : null }
+        <FormPage
+          page={page}
+          onSectionFocus={handleActiveSectionChange}
+          onChange={onPageChange} />
+        <div className="form-page-break">
+          <button
+            type="button"
+            className="btn btn-light btn-seamless"
+            onClick={addNewPage}>
+            + Add New Page
+          </button>
+        </div>
+      </div>
     )
   }
 
