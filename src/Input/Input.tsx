@@ -6,6 +6,7 @@ import InputTypes from './Types'
 import { Grip } from '../Icons'
 import OverflowMenu, { CheckableMenuItem } from '../OverflowMenu'
 import Options, { OptionItem } from './Options'
+import FileInput from './FileInput'
 
 export type Input = {
   key: string
@@ -22,6 +23,10 @@ export type Input = {
   pos: string
   shuffle: boolean
   options: OptionItem[]
+  size: number
+  maxsize: string
+  acceptAll: boolean
+  accept: string[]
 }
 
 type InputProps = {
@@ -164,7 +169,7 @@ type dummyInputProps = {
 
 function DummyInput (props: dummyInputProps): React.ReactNode {
   const { value, onChange } = props
-  const { options, type/*, size, labels, scores */} = value
+  const { options, type, size, /*labels, scores */} = value
   // const { labelWidth } = value
 
   switch (type) {
@@ -188,8 +193,8 @@ function DummyInput (props: dummyInputProps): React.ReactNode {
   case 'file':
     return (
       <>
-        {/*<input type="file" multiple={size > 1} className="form-control dummy-input" disabled />*/}
-        {/*<FileInput value={value} onChange={onChange} />*/}
+        <input type="file" multiple={size > 1} className="form-control dummy-input" disabled />
+        <FileInput value={value} onChange={onChange} />
       </>
     )
   case 'date':
@@ -257,7 +262,11 @@ export function emptyInput(): Input {
     showPos: false,
     pos: '',
     shuffle: false,
-    options: []
+    options: [],
+    size: 1,
+    maxsize: '',
+    acceptAll: true,
+    accept: [],
   }
 }
 
