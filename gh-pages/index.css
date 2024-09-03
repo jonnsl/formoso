@@ -206,6 +206,15 @@ body {
 .title-title {
   padding-right: 15px;
 }
+
+.type-select {
+  display: none;
+}
+.input:focus .title-row .type-select,
+.input:focus-within .title-row .type-select {
+  display: block;
+}
+
 .input:focus textarea.seamless,
 .input:focus-within textarea.seamless {
   border-bottom-color: #eee;
