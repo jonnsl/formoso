@@ -33648,8 +33648,8 @@
   function Options(props) {
     const { value: options, type, onChange } = props;
     const {
-      defaultLabel = "Op\xE7\xE3o %d",
-      addNewLabel = "Adicionar Nova Op\xE7\xE3o"
+      defaultLabel = "Option %d",
+      addNewLabel = "Add New Option"
     } = props;
     const previousRef = (0, import_react15.useRef)();
     const optionsRef = (0, import_react15.useRef)();
@@ -33792,7 +33792,7 @@
         onFocus: (e) => selectAll(e.target),
         onChange: (e) => onChange({ ...value, label: e.target.value })
       }
-    ), /* @__PURE__ */ import_react15.default.createElement("button", { type: "button", className: "btn btn-link", onClick: onRemove, title: "Excluir", disabled: undeletable }, /* @__PURE__ */ import_react15.default.createElement("span", { className: "bi bi-x", "aria-hidden": "true" })));
+    ), /* @__PURE__ */ import_react15.default.createElement("button", { type: "button", className: "btn btn-link", onClick: onRemove, title: "Remove", disabled: undeletable }, /* @__PURE__ */ import_react15.default.createElement("span", { className: "bi bi-x", "aria-hidden": "true" })));
   }
   var navigationKeys = [
     "ArrowDown",
@@ -33992,9 +33992,9 @@
       case "email":
         return /* @__PURE__ */ import_react16.default.createElement("input", { type: "email", className: "form-control dummy-input", readOnly: true });
       case "text":
-        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "Texto de resposta curta" });
+        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "Short answer" });
       case "textarea":
-        return /* @__PURE__ */ import_react16.default.createElement("textarea", { className: "form-control dummy-input", readOnly: true, placeholder: "Texto de resposta longa" });
+        return /* @__PURE__ */ import_react16.default.createElement("textarea", { className: "form-control dummy-input", readOnly: true, placeholder: "Paragraph" });
       case "file":
         return /* @__PURE__ */ import_react16.default.createElement(import_react16.default.Fragment, null);
       case "date":
