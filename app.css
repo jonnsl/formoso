@@ -6189,6 +6189,9 @@ body {
 #app {
   margin: 22px auto;
 }
+.hidden {
+  display: none !important;
+}
 .panel {
   margin-bottom: 22px;
   background-color: #fff;
@@ -6475,6 +6478,39 @@ body {
 .input:focus .option button,
 .input:focus-within .option button {
   display: block;
+}
+.input input[type=file] {
+  display: block;
+  width: 400px;
+}
+.input:focus input[type=file],
+.input:focus-within input[type=file] {
+  display: none;
+}
+.input-file-config {
+  display: none;
+}
+.input:focus .input-file-config,
+.input:focus-within .input-file-config {
+  display: block;
+}
+.input-row {
+  display: flex;
+  margin-bottom: 15px;
+}
+.input-row .control-label {
+  width: 33.33%;
+  font-weight: 700;
+}
+.input-row input[type=number] {
+  width: 70px;
+}
+.file-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 50%;
+  margin-bottom: 15px;
+  margin-top: -10px;
 }
 /*! Bundled license information:
 

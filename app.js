@@ -2384,9 +2384,9 @@
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
             __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
           }
-          var React17 = require_react();
+          var React18 = require_react();
           var Scheduler = require_scheduler();
-          var ReactSharedInternals = React17.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React18.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           var suppressWarning = false;
           function setSuppressWarning(newSuppressWarning) {
             {
@@ -3993,7 +3993,7 @@
             {
               if (props.value == null) {
                 if (typeof props.children === "object" && props.children !== null) {
-                  React17.Children.forEach(props.children, function(child) {
+                  React18.Children.forEach(props.children, function(child) {
                     if (child == null) {
                       return;
                     }
@@ -24879,17 +24879,17 @@
   });
 
   // gh-pages/App.tsx
-  var import_react21 = __toESM(require_react());
+  var import_react22 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
   // src/index.tsx
-  var import_react20 = __toESM(require_react());
+  var import_react21 = __toESM(require_react());
 
   // src/Page.tsx
-  var import_react19 = __toESM(require_react());
+  var import_react20 = __toESM(require_react());
 
   // src/Section.tsx
-  var import_react18 = __toESM(require_react());
+  var import_react19 = __toESM(require_react());
 
   // node_modules/@babel/runtime/helpers/esm/extends.js
   function _extends() {
@@ -25145,11 +25145,11 @@
   var index2 = /* @__PURE__ */ React2.forwardRef(TextareaAutosize);
 
   // src/Input/List.tsx
-  var import_react17 = __toESM(require_react());
+  var import_react18 = __toESM(require_react());
 
   // src/Input/Input.tsx
-  var import_react16 = __toESM(require_react());
-  var import_classnames3 = __toESM(require_classnames());
+  var import_react17 = __toESM(require_react());
+  var import_classnames4 = __toESM(require_classnames());
 
   // src/Input/Types.tsx
   var import_react3 = __toESM(require_react());
@@ -33853,12 +33853,131 @@
     };
   }
 
+  // src/Input/FileInput.tsx
+  var import_react16 = __toESM(require_react());
+  var import_classnames3 = __toESM(require_classnames());
+  function FileInput(props) {
+    const { value, onChange } = props;
+    const { maxsize, size, acceptAll, accept } = value;
+    const handleAcceptChange = (e) => {
+      const { accept: accept2 } = value;
+      if (e.target.checked) {
+        onChange({ ...value, accept: accept2.concat(e.target.value) });
+      } else {
+        onChange({ ...value, accept: accept2.filter((t) => t !== e.target.value) });
+      }
+    };
+    return /* @__PURE__ */ import_react16.default.createElement("div", { className: "input-file-config" }, /* @__PURE__ */ import_react16.default.createElement("div", { className: "input-row" }, /* @__PURE__ */ import_react16.default.createElement("label", { htmlFor: "", className: "control-label" }, "Allow only specific file types"), /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: !acceptAll,
+        onChange: (e) => onChange({ ...value, acceptAll: !e.target.checked })
+      }
+    )), /* @__PURE__ */ import_react16.default.createElement("div", { className: (0, import_classnames3.default)("file-types", { hidden: acceptAll }) }, /* @__PURE__ */ import_react16.default.createElement("label", { className: "custom-control custom-radio" }, /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: accept.indexOf("doc") !== -1,
+        onChange: handleAcceptChange,
+        value: "doc"
+      }
+    ), /* @__PURE__ */ import_react16.default.createElement("span", { className: "custom-control-description" }, "Document")), /* @__PURE__ */ import_react16.default.createElement("label", { className: "custom-control custom-radio" }, /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: accept.indexOf("ppt") !== -1,
+        onChange: handleAcceptChange,
+        value: "ppt"
+      }
+    ), /* @__PURE__ */ import_react16.default.createElement("span", { className: "custom-control-description" }, "Presentation")), /* @__PURE__ */ import_react16.default.createElement("label", { className: "custom-control custom-radio" }, /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: accept.indexOf("xls") !== -1,
+        onChange: handleAcceptChange,
+        value: "xls"
+      }
+    ), /* @__PURE__ */ import_react16.default.createElement("span", { className: "custom-control-description" }, "Spreadsheet")), /* @__PURE__ */ import_react16.default.createElement("label", { className: "custom-control custom-radio" }, /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: accept.indexOf("png") !== -1,
+        onChange: handleAcceptChange,
+        value: "png"
+      }
+    ), /* @__PURE__ */ import_react16.default.createElement("span", { className: "custom-control-description" }, "Drawing")), /* @__PURE__ */ import_react16.default.createElement("label", { className: "custom-control custom-radio" }, /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: accept.indexOf("pdf") !== -1,
+        onChange: handleAcceptChange,
+        value: "pdf"
+      }
+    ), /* @__PURE__ */ import_react16.default.createElement("span", { className: "custom-control-description" }, "PDF")), /* @__PURE__ */ import_react16.default.createElement("label", { className: "custom-control custom-radio" }, /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: accept.indexOf("img") !== -1,
+        onChange: handleAcceptChange,
+        value: "img"
+      }
+    ), /* @__PURE__ */ import_react16.default.createElement("span", { className: "custom-control-description" }, "Image")), /* @__PURE__ */ import_react16.default.createElement("label", { className: "custom-control custom-radio" }, /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: accept.indexOf("video") !== -1,
+        onChange: handleAcceptChange,
+        value: "video"
+      }
+    ), /* @__PURE__ */ import_react16.default.createElement("span", { className: "custom-control-description" }, "Video")), /* @__PURE__ */ import_react16.default.createElement("label", { className: "custom-control custom-radio" }, /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        type: "checkbox",
+        className: "custom-control-input",
+        checked: accept.indexOf("audio") !== -1,
+        onChange: handleAcceptChange,
+        value: "audio"
+      }
+    ), /* @__PURE__ */ import_react16.default.createElement("span", { className: "custom-control-description" }, "Audio"))), /* @__PURE__ */ import_react16.default.createElement("div", { className: "input-row" }, /* @__PURE__ */ import_react16.default.createElement("label", { htmlFor: "", className: "control-label" }, "Maximum number of files"), /* @__PURE__ */ import_react16.default.createElement(
+      "input",
+      {
+        className: "form-control",
+        type: "number",
+        step: "1",
+        min: "1",
+        max: "5",
+        value: size,
+        onChange: (e) => onChange({ ...value, size: parseInt(e.target.value, 10) })
+      }
+    )), /* @__PURE__ */ import_react16.default.createElement("div", { className: "input-row" }, /* @__PURE__ */ import_react16.default.createElement("label", { htmlFor: "", className: "control-label" }, "Maximum file size"), /* @__PURE__ */ import_react16.default.createElement("div", { className: "" }, /* @__PURE__ */ import_react16.default.createElement(
+      "select",
+      {
+        className: "custom-select form-control",
+        value: maxsize,
+        onChange: (e) => onChange({ ...value, maxsize: e.target.value })
+      },
+      /* @__PURE__ */ import_react16.default.createElement("option", { value: "100kb" }, "100 KB"),
+      /* @__PURE__ */ import_react16.default.createElement("option", { value: "500kb" }, "500 KB"),
+      /* @__PURE__ */ import_react16.default.createElement("option", { value: "1mb" }, "1 MB"),
+      /* @__PURE__ */ import_react16.default.createElement("option", { value: "2mb" }, "2 MB")
+    ))));
+  }
+
   // src/Input/Input.tsx
   function Input(props) {
     const { onChange, onDuplicate, onRemove } = props;
     const { label, type, condition, isConditional, required: required2 } = props.input;
     const { showPre, showDescription, showPos, shuffle, pre, pos, help } = props.input;
-    return /* @__PURE__ */ import_react16.default.createElement("div", { tabIndex: 0, className: "input" }, /* @__PURE__ */ import_react16.default.createElement("div", { className: "grip-row" }, /* @__PURE__ */ import_react16.default.createElement(Grip, { className: "grip" })), showPre ? /* @__PURE__ */ import_react16.default.createElement(
+    return /* @__PURE__ */ import_react17.default.createElement("div", { tabIndex: 0, className: "input" }, /* @__PURE__ */ import_react17.default.createElement("div", { className: "grip-row" }, /* @__PURE__ */ import_react17.default.createElement(Grip, { className: "grip" })), showPre ? /* @__PURE__ */ import_react17.default.createElement(
       index2,
       {
         className: "seamless",
@@ -33867,7 +33986,7 @@
         onChange: (e) => onChange({ ...props.input, pre: e.target.value }),
         value: pre
       }
-    ) : null, /* @__PURE__ */ import_react16.default.createElement("div", { className: "title-row" }, /* @__PURE__ */ import_react16.default.createElement("div", { className: "title-title" }, /* @__PURE__ */ import_react16.default.createElement(
+    ) : null, /* @__PURE__ */ import_react17.default.createElement("div", { className: "title-row" }, /* @__PURE__ */ import_react17.default.createElement("div", { className: "title-title" }, /* @__PURE__ */ import_react17.default.createElement(
       index2,
       {
         className: "seamless",
@@ -33876,14 +33995,14 @@
         value: label,
         onChange: (e) => onChange({ ...props.input, label: e.target.value })
       }
-    )), /* @__PURE__ */ import_react16.default.createElement(
+    )), /* @__PURE__ */ import_react17.default.createElement(
       InputTypes,
       {
         className: "custom-select form-control type-select",
         value: type,
         onChange: (e) => onChange({ ...props.input, type: e.target.value })
       }
-    )), showDescription ? /* @__PURE__ */ import_react16.default.createElement(
+    )), showDescription ? /* @__PURE__ */ import_react17.default.createElement(
       index2,
       {
         className: "seamless",
@@ -33892,7 +34011,7 @@
         onChange: (e) => onChange({ ...props.input, help: e.target.value }),
         value: help
       }
-    ) : null, /* @__PURE__ */ import_react16.default.createElement(DummyInput, { value: props.input, onChange }), showPos ? /* @__PURE__ */ import_react16.default.createElement(
+    ) : null, /* @__PURE__ */ import_react17.default.createElement(DummyInput, { value: props.input, onChange }), showPos ? /* @__PURE__ */ import_react17.default.createElement(
       index2,
       {
         className: "seamless",
@@ -33901,17 +34020,17 @@
         onChange: (e) => onChange({ ...props.input, pos: e.target.value }),
         value: pos
       }
-    ) : null, /* @__PURE__ */ import_react16.default.createElement("div", { className: "bottom-toolbar" }, /* @__PURE__ */ import_react16.default.createElement("div", null, isConditional ? /* @__PURE__ */ import_react16.default.createElement(
+    ) : null, /* @__PURE__ */ import_react17.default.createElement("div", { className: "bottom-toolbar" }, /* @__PURE__ */ import_react17.default.createElement("div", null, isConditional ? /* @__PURE__ */ import_react17.default.createElement(
       index2,
       {
         spellCheck: false,
-        className: (0, import_classnames3.default)("seamless input_condition"),
+        className: (0, import_classnames4.default)("seamless input_condition"),
         rows: 1,
         placeholder: "Condition",
         onChange: (e) => onChange({ ...props.input, condition: e.target.value }),
         value: condition
       }
-    ) : null), /* @__PURE__ */ import_react16.default.createElement("div", null, /* @__PURE__ */ import_react16.default.createElement("button", { type: "button", className: "btn btn-link", onClick: onDuplicate, title: "Duplicate" }, /* @__PURE__ */ import_react16.default.createElement("i", { className: "bi bi-copy" })), /* @__PURE__ */ import_react16.default.createElement("button", { type: "button", className: "btn btn-link", onClick: onRemove, title: "Remove" }, /* @__PURE__ */ import_react16.default.createElement("i", { className: "bi bi-trash" })), /* @__PURE__ */ import_react16.default.createElement(
+    ) : null), /* @__PURE__ */ import_react17.default.createElement("div", null, /* @__PURE__ */ import_react17.default.createElement("button", { type: "button", className: "btn btn-link", onClick: onDuplicate, title: "Duplicate" }, /* @__PURE__ */ import_react17.default.createElement("i", { className: "bi bi-copy" })), /* @__PURE__ */ import_react17.default.createElement("button", { type: "button", className: "btn btn-link", onClick: onRemove, title: "Remove" }, /* @__PURE__ */ import_react17.default.createElement("i", { className: "bi bi-trash" })), /* @__PURE__ */ import_react17.default.createElement(
       "button",
       {
         type: "button",
@@ -33920,8 +34039,8 @@
         title: "Validations",
         disabled: ["text", "textarea", "number", "date"].indexOf(type) === -1
       },
-      /* @__PURE__ */ import_react16.default.createElement("i", { className: "bi bi-asterisk" })
-    ), /* @__PURE__ */ import_react16.default.createElement("button", { type: "button", className: "btn btn-link", onClick: noop6, title: "Advanced Options" }, /* @__PURE__ */ import_react16.default.createElement("i", { className: "bi bi-gear" })), /* @__PURE__ */ import_react16.default.createElement("label", { className: "radio-inline radio-required" }, /* @__PURE__ */ import_react16.default.createElement(
+      /* @__PURE__ */ import_react17.default.createElement("i", { className: "bi bi-asterisk" })
+    ), /* @__PURE__ */ import_react17.default.createElement("button", { type: "button", className: "btn btn-link", onClick: noop6, title: "Advanced Options" }, /* @__PURE__ */ import_react17.default.createElement("i", { className: "bi bi-gear" })), /* @__PURE__ */ import_react17.default.createElement("label", { className: "radio-inline radio-required" }, /* @__PURE__ */ import_react17.default.createElement(
       "input",
       {
         type: "checkbox",
@@ -33929,35 +34048,35 @@
         checked: required2,
         onChange: (e) => onChange({ ...props.input, required: e.target.checked })
       }
-    ), " Required"), /* @__PURE__ */ import_react16.default.createElement(OverflowMenu, { autoClose: false }, /* @__PURE__ */ import_react16.default.createElement(
+    ), " Required"), /* @__PURE__ */ import_react17.default.createElement(OverflowMenu, { autoClose: false }, /* @__PURE__ */ import_react17.default.createElement(
       CheckableMenuItem,
       {
         checked: showPre,
         onClick: () => onChange({ ...props.input, showPre: !showPre })
       },
       "Before"
-    ), /* @__PURE__ */ import_react16.default.createElement(
+    ), /* @__PURE__ */ import_react17.default.createElement(
       CheckableMenuItem,
       {
         checked: showDescription,
         onClick: () => onChange({ ...props.input, showDescription: !showDescription })
       },
       "Show description"
-    ), /* @__PURE__ */ import_react16.default.createElement(
+    ), /* @__PURE__ */ import_react17.default.createElement(
       CheckableMenuItem,
       {
         checked: showPos,
         onClick: () => onChange({ ...props.input, showPos: !showPos })
       },
       "After"
-    ), type === "radio" || type === "checkbox" || type === "select" || type === "multi" ? /* @__PURE__ */ import_react16.default.createElement(
+    ), type === "radio" || type === "checkbox" || type === "select" || type === "multi" ? /* @__PURE__ */ import_react17.default.createElement(
       CheckableMenuItem,
       {
         checked: shuffle,
         onClick: () => onChange({ ...props.input, shuffle: !shuffle })
       },
       "Shuffle option order"
-    ) : null, /* @__PURE__ */ import_react16.default.createElement(
+    ) : null, /* @__PURE__ */ import_react17.default.createElement(
       CheckableMenuItem,
       {
         checked: isConditional,
@@ -33970,14 +34089,15 @@
     const { value, onChange } = props;
     const {
       options,
-      type
-      /*, size, labels, scores */
+      type,
+      size
+      /*labels, scores */
     } = value;
     switch (type) {
       case "radio":
       case "checkbox":
       case "select":
-        return /* @__PURE__ */ import_react16.default.createElement(
+        return /* @__PURE__ */ import_react17.default.createElement(
           Options,
           {
             value: options,
@@ -33986,23 +34106,23 @@
           }
         );
       case "tel":
-        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true });
+        return /* @__PURE__ */ import_react17.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true });
       case "url":
-        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true });
+        return /* @__PURE__ */ import_react17.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true });
       case "email":
-        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "email", className: "form-control dummy-input", readOnly: true });
+        return /* @__PURE__ */ import_react17.default.createElement("input", { type: "email", className: "form-control dummy-input", readOnly: true });
       case "text":
-        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "Short answer" });
+        return /* @__PURE__ */ import_react17.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "Short answer" });
       case "textarea":
-        return /* @__PURE__ */ import_react16.default.createElement("textarea", { className: "form-control dummy-input", readOnly: true, placeholder: "Paragraph" });
+        return /* @__PURE__ */ import_react17.default.createElement("textarea", { className: "form-control dummy-input", readOnly: true, placeholder: "Paragraph" });
       case "file":
-        return /* @__PURE__ */ import_react16.default.createElement(import_react16.default.Fragment, null);
+        return /* @__PURE__ */ import_react17.default.createElement(import_react17.default.Fragment, null, /* @__PURE__ */ import_react17.default.createElement("input", { type: "file", multiple: size > 1, className: "form-control dummy-input", disabled: true }), /* @__PURE__ */ import_react17.default.createElement(FileInput, { value, onChange }));
       case "date":
-        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "date", className: "form-control dummy-input", disabled: true, readOnly: true, value: "" });
+        return /* @__PURE__ */ import_react17.default.createElement("input", { type: "date", className: "form-control dummy-input", disabled: true, readOnly: true, value: "" });
       case "number":
-        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "number", className: "form-control dummy-input", disabled: true, readOnly: true, value: "" });
+        return /* @__PURE__ */ import_react17.default.createElement("input", { type: "number", className: "form-control dummy-input", disabled: true, readOnly: true, value: "" });
       case "money":
-        return /* @__PURE__ */ import_react16.default.createElement("input", { type: "text", className: "form-control dummy-input", disabled: true, readOnly: true, value: "R$ 0,00" });
+        return /* @__PURE__ */ import_react17.default.createElement("input", { type: "text", className: "form-control dummy-input", disabled: true, readOnly: true, value: "R$ 0,00" });
       case "multi":
         return null;
       /*<Multi
@@ -34011,7 +34131,7 @@
       scores={scores}
       onChange={(changes = true) => onChange({ ...value, ...changes })}/>*/
       case "address":
-        return /* @__PURE__ */ import_react16.default.createElement(import_react16.default.Fragment, null, /* @__PURE__ */ import_react16.default.createElement("div", { className: "form-group row" }, /* @__PURE__ */ import_react16.default.createElement("label", { className: "control-label col-md-12" }, "CEP"), /* @__PURE__ */ import_react16.default.createElement("div", { className: "col-md-4" }, /* @__PURE__ */ import_react16.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "00000-000" }))), /* @__PURE__ */ import_react16.default.createElement("div", { className: "form-group row" }, /* @__PURE__ */ import_react16.default.createElement("label", { className: "control-label col-md-12" }, "Endere\xE7o"), /* @__PURE__ */ import_react16.default.createElement("div", { className: "col-md-8" }, /* @__PURE__ */ import_react16.default.createElement("textarea", { className: "form-control dummy-input", readOnly: true, placeholder: "" }))), /* @__PURE__ */ import_react16.default.createElement("div", { className: "form-group optional row" }, /* @__PURE__ */ import_react16.default.createElement("label", { className: "control-label col-md-12" }, "Complemento"), /* @__PURE__ */ import_react16.default.createElement("div", { className: "col-md-8" }, /* @__PURE__ */ import_react16.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "" }))));
+        return /* @__PURE__ */ import_react17.default.createElement(import_react17.default.Fragment, null, /* @__PURE__ */ import_react17.default.createElement("div", { className: "form-group row" }, /* @__PURE__ */ import_react17.default.createElement("label", { className: "control-label col-md-12" }, "CEP"), /* @__PURE__ */ import_react17.default.createElement("div", { className: "col-md-4" }, /* @__PURE__ */ import_react17.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "00000-000" }))), /* @__PURE__ */ import_react17.default.createElement("div", { className: "form-group row" }, /* @__PURE__ */ import_react17.default.createElement("label", { className: "control-label col-md-12" }, "Endere\xE7o"), /* @__PURE__ */ import_react17.default.createElement("div", { className: "col-md-8" }, /* @__PURE__ */ import_react17.default.createElement("textarea", { className: "form-control dummy-input", readOnly: true, placeholder: "" }))), /* @__PURE__ */ import_react17.default.createElement("div", { className: "form-group optional row" }, /* @__PURE__ */ import_react17.default.createElement("label", { className: "control-label col-md-12" }, "Complemento"), /* @__PURE__ */ import_react17.default.createElement("div", { className: "col-md-8" }, /* @__PURE__ */ import_react17.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "" }))));
       case "rating":
         return null;
     }
@@ -34033,7 +34153,11 @@
       showPos: false,
       pos: "",
       shuffle: false,
-      options: []
+      options: [],
+      size: 1,
+      maxsize: "",
+      acceptAll: true,
+      accept: []
     };
   }
   function duplicateInput(input) {
@@ -34058,7 +34182,7 @@
       const onRemove = () => {
         onChange(remove(props.inputs, index3));
       };
-      return /* @__PURE__ */ import_react17.default.createElement(
+      return /* @__PURE__ */ import_react18.default.createElement(
         Input,
         {
           key: input.key,
@@ -34069,22 +34193,22 @@
         }
       );
     };
-    return /* @__PURE__ */ import_react17.default.createElement("div", null, props.inputs.map(renderInput));
+    return /* @__PURE__ */ import_react18.default.createElement("div", null, props.inputs.map(renderInput));
   }
 
   // src/Section.tsx
   function Section(props) {
     const { section, onFocus, onChange, onDuplicate, onRemove, onMerge } = props;
-    const divRef = (0, import_react18.useRef)(null);
-    return /* @__PURE__ */ import_react18.default.createElement(
+    const divRef = (0, import_react19.useRef)(null);
+    return /* @__PURE__ */ import_react19.default.createElement(
       "div",
       {
         className: "panel panel-default section",
         ref: divRef,
         onFocus: () => divRef.current ? onFocus(divRef.current) : null
       },
-      /* @__PURE__ */ import_react18.default.createElement("div", { className: "section-top-bar" }, /* @__PURE__ */ import_react18.default.createElement("div", { className: "section-info" }, /* @__PURE__ */ import_react18.default.createElement(Grip, { className: "grip" }), /* @__PURE__ */ import_react18.default.createElement("span", null, props.title), /* @__PURE__ */ import_react18.default.createElement(Triangle, { className: "top-triangle" })), /* @__PURE__ */ import_react18.default.createElement("div", { className: "section-overflow-menu" }, /* @__PURE__ */ import_react18.default.createElement(OverflowMenu, null, /* @__PURE__ */ import_react18.default.createElement(MenuItem, { onClick: onDuplicate }, "Duplicar"), onRemove ? /* @__PURE__ */ import_react18.default.createElement(MenuItem, { onClick: onRemove }, "Excluir") : null, onMerge ? /* @__PURE__ */ import_react18.default.createElement(MenuItem, { onClick: onMerge }, "Mesclar com a se\xE7\xE3o acima") : null))),
-      /* @__PURE__ */ import_react18.default.createElement("div", { className: "panel-heading" }, /* @__PURE__ */ import_react18.default.createElement(
+      /* @__PURE__ */ import_react19.default.createElement("div", { className: "section-top-bar" }, /* @__PURE__ */ import_react19.default.createElement("div", { className: "section-info" }, /* @__PURE__ */ import_react19.default.createElement(Grip, { className: "grip" }), /* @__PURE__ */ import_react19.default.createElement("span", null, props.title), /* @__PURE__ */ import_react19.default.createElement(Triangle, { className: "top-triangle" })), /* @__PURE__ */ import_react19.default.createElement("div", { className: "section-overflow-menu" }, /* @__PURE__ */ import_react19.default.createElement(OverflowMenu, null, /* @__PURE__ */ import_react19.default.createElement(MenuItem, { onClick: onDuplicate }, "Duplicar"), onRemove ? /* @__PURE__ */ import_react19.default.createElement(MenuItem, { onClick: onRemove }, "Excluir") : null, onMerge ? /* @__PURE__ */ import_react19.default.createElement(MenuItem, { onClick: onMerge }, "Mesclar com a se\xE7\xE3o acima") : null))),
+      /* @__PURE__ */ import_react19.default.createElement("div", { className: "panel-heading" }, /* @__PURE__ */ import_react19.default.createElement(
         index2,
         {
           rows: 1,
@@ -34094,7 +34218,7 @@
           onChange: (e) => onChange({ ...section, title: e.target.value })
         }
       )),
-      /* @__PURE__ */ import_react18.default.createElement("div", { className: "panel-body" }, /* @__PURE__ */ import_react18.default.createElement(
+      /* @__PURE__ */ import_react19.default.createElement("div", { className: "panel-body" }, /* @__PURE__ */ import_react19.default.createElement(
         InputList,
         {
           inputs: section.inputs,
@@ -34154,7 +34278,7 @@
         onSectionFocus(el, index3);
       };
       const length = props.page.sections.length;
-      return /* @__PURE__ */ import_react19.default.createElement(
+      return /* @__PURE__ */ import_react20.default.createElement(
         Section,
         {
           key: section.key,
@@ -34181,12 +34305,12 @@
   // src/index.tsx
   function Formoso(props) {
     const { pages, onChange } = props;
-    const [sideBarPosition, setSideBarPosition] = (0, import_react20.useState)(22);
-    const sideBarContainerRef = (0, import_react20.useRef)(null);
-    const sideBarRef = (0, import_react20.useRef)(null);
-    const [sectionRef, setSectionRef] = (0, import_react20.useState)(null);
-    const [activePage, setActivePage] = (0, import_react20.useState)(0);
-    const [activeSection, setActiveSection] = (0, import_react20.useState)(0);
+    const [sideBarPosition, setSideBarPosition] = (0, import_react21.useState)(22);
+    const sideBarContainerRef = (0, import_react21.useRef)(null);
+    const sideBarRef = (0, import_react21.useRef)(null);
+    const [sectionRef, setSectionRef] = (0, import_react21.useState)(null);
+    const [activePage, setActivePage] = (0, import_react21.useState)(0);
+    const [activeSection, setActiveSection] = (0, import_react21.useState)(0);
     const handleScroll = () => {
       if (sectionRef && sideBarRef.current && sideBarContainerRef.current) {
         setSideBarPosition(calculateSidebarPosition(sectionRef, sideBarRef.current, sideBarContainerRef.current));
@@ -34200,7 +34324,7 @@
       setActiveSection(activeSectionIndex);
       setActivePage(activePageIndex);
     };
-    (0, import_react20.useEffect)(() => {
+    (0, import_react21.useEffect)(() => {
       window.addEventListener("scroll", handleScroll);
       return () => {
         window.removeEventListener("scroll", handleScroll);
@@ -34221,7 +34345,7 @@
         handleActiveSectionChange(el, activeSectionIndex, index3);
       };
       const isLastRemainingPage = pages.length === 1;
-      return /* @__PURE__ */ import_react20.default.createElement("div", { className: "form-page-container", key: page.key }, !isLastRemainingPage ? /* @__PURE__ */ import_react20.default.createElement("div", { className: "form-page-topmenu" }, /* @__PURE__ */ import_react20.default.createElement("span", null, "Page ", index3 + 1), /* @__PURE__ */ import_react20.default.createElement(
+      return /* @__PURE__ */ import_react21.default.createElement("div", { className: "form-page-container", key: page.key }, !isLastRemainingPage ? /* @__PURE__ */ import_react21.default.createElement("div", { className: "form-page-topmenu" }, /* @__PURE__ */ import_react21.default.createElement("span", null, "Page ", index3 + 1), /* @__PURE__ */ import_react21.default.createElement(
         "button",
         {
           type: "button",
@@ -34229,14 +34353,14 @@
           onClick: removePage
         },
         "Remove Page"
-      )) : null, /* @__PURE__ */ import_react20.default.createElement(
+      )) : null, /* @__PURE__ */ import_react21.default.createElement(
         FormPage,
         {
           page,
           onSectionFocus,
           onChange: onPageChange
         }
-      ), /* @__PURE__ */ import_react20.default.createElement("div", { className: "form-page-break" }, /* @__PURE__ */ import_react20.default.createElement(
+      ), /* @__PURE__ */ import_react21.default.createElement("div", { className: "form-page-break" }, /* @__PURE__ */ import_react21.default.createElement(
         "button",
         {
           type: "button",
@@ -34254,18 +34378,18 @@
       e.preventDefault();
       onChange(addNewQuestion(pages, activePage, activeSection));
     };
-    return /* @__PURE__ */ import_react20.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react20.default.createElement("div", { className: "col-md-11" }, pages.map(renderPage)), /* @__PURE__ */ import_react20.default.createElement("div", { className: "col-md-1 side_panel_container", ref: sideBarContainerRef }, /* @__PURE__ */ import_react20.default.createElement(
+    return /* @__PURE__ */ import_react21.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react21.default.createElement("div", { className: "col-md-11" }, pages.map(renderPage)), /* @__PURE__ */ import_react21.default.createElement("div", { className: "col-md-1 side_panel_container", ref: sideBarContainerRef }, /* @__PURE__ */ import_react21.default.createElement(
       "div",
       {
         className: "panel panel-default side-panel",
         style: { transform: `translateY(${sideBarPosition}px)` },
         ref: sideBarRef
       },
-      /* @__PURE__ */ import_react20.default.createElement("button", { type: "button", className: "btn btn-link", onMouseDown: onNewQuestion, title: "New Question" }, /* @__PURE__ */ import_react20.default.createElement("span", { className: "bi bi-plus-circle-fill", "aria-hidden": "true" })),
-      /* @__PURE__ */ import_react20.default.createElement("button", { type: "button", className: "btn btn-link", onMouseDown: onNewSection, title: "New Section" }, /* @__PURE__ */ import_react20.default.createElement("span", { className: "bi bi-file-earmark-plus-fill", "aria-hidden": "true" })),
-      /* @__PURE__ */ import_react20.default.createElement("button", { type: "button", className: "btn btn-link", onClick: noop7, title: "Preview" }, /* @__PURE__ */ import_react20.default.createElement("span", { className: "bi bi-eye-fill", "aria-hidden": "true" })),
-      /* @__PURE__ */ import_react20.default.createElement("button", { type: "button", className: "btn btn-link", onClick: noop7, title: "Save" }, /* @__PURE__ */ import_react20.default.createElement("span", { className: "bi bi-floppy2-fill", "aria-hidden": "true" })),
-      /* @__PURE__ */ import_react20.default.createElement("button", { type: "button", className: "btn btn-link", onClick: noop7, title: "Import" }, /* @__PURE__ */ import_react20.default.createElement("span", { className: "bi bi-file-arrow-down-fill", "aria-hidden": "true" }))
+      /* @__PURE__ */ import_react21.default.createElement("button", { type: "button", className: "btn btn-link", onMouseDown: onNewQuestion, title: "New Question" }, /* @__PURE__ */ import_react21.default.createElement("span", { className: "bi bi-plus-circle-fill", "aria-hidden": "true" })),
+      /* @__PURE__ */ import_react21.default.createElement("button", { type: "button", className: "btn btn-link", onMouseDown: onNewSection, title: "New Section" }, /* @__PURE__ */ import_react21.default.createElement("span", { className: "bi bi-file-earmark-plus-fill", "aria-hidden": "true" })),
+      /* @__PURE__ */ import_react21.default.createElement("button", { type: "button", className: "btn btn-link", onClick: noop7, title: "Preview" }, /* @__PURE__ */ import_react21.default.createElement("span", { className: "bi bi-eye-fill", "aria-hidden": "true" })),
+      /* @__PURE__ */ import_react21.default.createElement("button", { type: "button", className: "btn btn-link", onClick: noop7, title: "Save" }, /* @__PURE__ */ import_react21.default.createElement("span", { className: "bi bi-floppy2-fill", "aria-hidden": "true" })),
+      /* @__PURE__ */ import_react21.default.createElement("button", { type: "button", className: "btn btn-link", onClick: noop7, title: "Import" }, /* @__PURE__ */ import_react21.default.createElement("span", { className: "bi bi-file-arrow-down-fill", "aria-hidden": "true" }))
     )));
   }
   function noop7() {
@@ -34312,12 +34436,12 @@
 
   // gh-pages/App.tsx
   function App2() {
-    const [pages, setPages] = (0, import_react21.useState)([emptyPage()]);
-    return /* @__PURE__ */ import_react21.default.createElement(Formoso, { pages, onChange: setPages });
+    const [pages, setPages] = (0, import_react22.useState)([emptyPage()]);
+    return /* @__PURE__ */ import_react22.default.createElement(Formoso, { pages, onChange: setPages });
   }
   var container = document.getElementById("app");
   var root = (0, import_client.createRoot)(container);
-  root.render(/* @__PURE__ */ import_react21.default.createElement(App2, null));
+  root.render(/* @__PURE__ */ import_react22.default.createElement(App2, null));
 })();
 /*! Bundled license information:
 
