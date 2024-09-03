@@ -10,7 +10,7 @@ export type Page = {
 
 export type FormPageProps = {
   page: Page
-  onSectionFocus: (el: HTMLElement) => void
+  onSectionFocus: (el: HTMLElement, index: number) => void
   onChange: (value: Page) => void
 }
 
@@ -44,6 +44,10 @@ export default function FormPage(props: FormPageProps): ReactNode {
       onChange({ ...page, sections })
     }
 
+    const handleSectionFocus = (el: HTMLElement): void => {
+      onSectionFocus(el, index)
+    }
+
     const length = props.page.sections.length
 
     return (
@@ -51,7 +55,7 @@ export default function FormPage(props: FormPageProps): ReactNode {
         key={section.key}
         title={`Section ${index + 1} of ${length}`}
         section={section}
-        onFocus={onSectionFocus}
+        onFocus={handleSectionFocus}
         onDuplicate={onDuplicate}
         onRemove={length > 1 ? onRemove : null}
         onMerge={index > 0 ? onMerge : null}
@@ -72,5 +76,3 @@ export function emptyPage(): Page {
     sections: [emptySection()],
   }
 }
-
-function noop (): void {}

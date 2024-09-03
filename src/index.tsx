@@ -1,7 +1,9 @@
 
-import React, { ElementRef, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ElementRef, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import FormPage, { emptyPage, Page } from './Page'
 import { remove, replaceAt, splice } from './Immutable'
+import { emptySection, Section } from './Section'
+import { emptyInput } from './Input/Input'
 
 export type FormosoProps = {
   pages: Page[]
@@ -15,7 +17,8 @@ export default function Formoso(props: FormosoProps): ReactNode {
   const sideBarRef = useRef<ElementRef<"div">>(null)
   // Keeps track of the currently active/focused section
   const [sectionRef, setSectionRef] = useState<HTMLElement | null>(null)
-  // const [activeSection, setActiveSection] = useState<???>(null)
+  const [activePage, setActivePage] = useState<number>(0)
+  const [activeSection, setActiveSection] = useState<number>(0)
 
   const handleScroll = (): void => {
     if (sectionRef && sideBarRef.current && sideBarContainerRef.current) {
@@ -23,12 +26,13 @@ export default function Formoso(props: FormosoProps): ReactNode {
     }
   }
 
-  const handleActiveSectionChange = (el: HTMLElement/*, activeSection: ???*/): void => {
+  const handleActiveSectionChange = (el: HTMLElement, activeSectionIndex: number, activePageIndex: number): void => {
     if (el && sideBarRef.current && sideBarContainerRef.current) {
       setSideBarPosition(calculateSidebarPosition(el, sideBarRef.current, sideBarContainerRef.current))
       setSectionRef(el)
     }
-    //activeSection = activeSection
+    setActiveSection(activeSectionIndex)
+    setActivePage(activePageIndex)
   }
 
   useEffect(() => {
@@ -51,6 +55,10 @@ export default function Formoso(props: FormosoProps): ReactNode {
       onChange(newPages)
     }
 
+    const onSectionFocus = (el: HTMLElement, activeSectionIndex: number) => {
+      handleActiveSectionChange(el, activeSectionIndex, index)
+    }
+
     // const isFirstPage = index === 0
     const isLastRemainingPage = pages.length === 1
 
@@ -68,7 +76,7 @@ export default function Formoso(props: FormosoProps): ReactNode {
         </div> : null }
         <FormPage
           page={page}
-          onSectionFocus={handleActiveSectionChange}
+          onSectionFocus={onSectionFocus}
           onChange={onPageChange} />
         <div className="form-page-break">
           <button
@@ -82,6 +90,16 @@ export default function Formoso(props: FormosoProps): ReactNode {
     )
   }
 
+  const onNewSection = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    onChange(addNewSection(pages, activePage, activeSection))
+  }
+
+  const onNewQuestion = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    onChange(addNewQuestion(pages, activePage, activeSection))
+  }
+
   return (
     <div className="row">
       <div className="col-md-11">
@@ -93,11 +111,11 @@ export default function Formoso(props: FormosoProps): ReactNode {
           className="panel panel-default side-panel"
           style={{ transform: `translateY(${sideBarPosition}px)` }}
           ref={sideBarRef}>
-          <button type="button" className="btn btn-link" onMouseDown={noop} title="New Question">
+          <button type="button" className="btn btn-link" onMouseDown={onNewQuestion} title="New Question">
             <span className="bi bi-plus-circle-fill" aria-hidden="true"></span>
           </button>
 
-          <button type="button" className="btn btn-link" onMouseDown={noop} title="New Section">
+          <button type="button" className="btn btn-link" onMouseDown={onNewSection} title="New Section">
             <span className="bi bi-file-earmark-plus-fill" aria-hidden="true"></span>
           </button>
 
@@ -145,4 +163,43 @@ function calculateSidebarPosition (section: HTMLElement, sidebar: HTMLElement, s
   // return Math.min(section.offsetTop, document.body.offsetHeight - sidebarContainer.offsetTop - sidebarContainer.offsetHeight)
 
   return section.offsetTop
+}
+
+/**
+ * Adds a new Section to a given page after a given section
+ */
+function addNewSection (pages: Page[], pageIndex: number, sectionIndex: number): Page[] {
+  const oldPage = pages[pageIndex]
+  if (oldPage === undefined) {
+    return pages
+  }
+  const newPage = {
+    ...oldPage,
+    sections: splice(oldPage.sections, sectionIndex + 1, 0, emptySection())
+  }
+  return replaceAt(pages, pageIndex, newPage)
+}
+
+/**
+ * Adds a new Question to a given section on a given page
+ */
+function addNewQuestion (pages: Page[], pageIndex: number, sectionIndex: number): Page[] {
+  const oldPage = pages[pageIndex]
+  if (oldPage === undefined) {
+    return pages
+  }
+  const oldSection = oldPage.sections[sectionIndex]
+  if (oldSection === undefined) {
+    return pages
+  }
+
+  const newSection: Section = {
+    ...oldSection,
+    inputs: oldSection.inputs.concat(emptyInput())
+  }
+  const newPage: Page = {
+    ...oldPage,
+    sections: replaceAt(oldPage.sections, sectionIndex, newSection)
+  }
+  return replaceAt(pages, pageIndex, newPage)
 }
