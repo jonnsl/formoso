@@ -1,5 +1,18 @@
 
 /**
+ * Removes an item from startIndex and inserts at endIndex
+ */
+export function reorder<T> (list: ReadonlyArray<T>, startIndex: number, endIndex: number): Array<T> {
+  const result = Array.from(list)
+  const [removed] = result.splice(startIndex, 1)
+  if (removed !== undefined) {
+    result.splice(endIndex, 0, removed)
+  }
+
+  return result
+}
+
+/**
  * Inserts an item at position index
  */
 export function addAt<T> (arr: ReadonlyArray<T>, index: number, ...item: ReadonlyArray<T>): Array<T> {

@@ -5,6 +5,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import InputTypes from './Types'
 import { Grip } from '../Icons'
 import OverflowMenu, { CheckableMenuItem } from '../OverflowMenu'
+import Options, { OptionItem } from './Options'
 
 export type Input = {
   key: string
@@ -20,6 +21,7 @@ export type Input = {
   showPos: boolean
   pos: string
   shuffle: boolean
+  options: OptionItem[]
 }
 
 type InputProps = {
@@ -70,6 +72,8 @@ export default function Input (props: InputProps): React.ReactNode {
           placeholder="Description"
           onChange={(e) => onChange({ ...props.input, help: e.target.value })}
           value={help}/> : null }
+
+      <DummyInput value={props.input} onChange={onChange} />
 
       { showPos ?
         <TextareaAutosize
@@ -153,6 +157,87 @@ export default function Input (props: InputProps): React.ReactNode {
   )
 }
 
+type dummyInputProps = {
+  value: Input
+  onChange: any
+}
+
+function DummyInput (props: dummyInputProps): React.ReactNode {
+  const { value, onChange } = props
+  const { options, type/*, size, labels, scores */} = value
+  // const { labelWidth } = value
+
+  switch (type) {
+  case 'radio':
+  case 'checkbox':
+  case 'select':
+    return <Options
+      value={options}
+      type={type}
+      onChange={(options) => onChange({ ...value, options })} />
+  case 'tel':
+    return <input type="text" className="form-control dummy-input" readOnly />
+  case 'url':
+    return <input type="text" className="form-control dummy-input" readOnly />
+  case 'email':
+    return <input type="email" className="form-control dummy-input" readOnly />
+  case 'text':
+    return <input type="text" className="form-control dummy-input" readOnly placeholder="Texto de resposta curta" />
+  case 'textarea':
+    return <textarea className="form-control dummy-input" readOnly placeholder="Texto de resposta longa" />
+  case 'file':
+    return (
+      <>
+        {/*<input type="file" multiple={size > 1} className="form-control dummy-input" disabled />*/}
+        {/*<FileInput value={value} onChange={onChange} />*/}
+      </>
+    )
+  case 'date':
+    return <input type="date" className="form-control dummy-input" disabled readOnly value="" />
+  case 'number':
+    return <input type="number" className="form-control dummy-input" disabled readOnly value="" />
+  case 'money':
+    return <input type="text" className="form-control dummy-input" disabled readOnly value="R$ 0,00" />
+  case 'multi':
+    return null/*<Multi
+      labelWidth={labelWidth}
+      labels={labels}
+      scores={scores}
+      onChange={(changes = true) => onChange({ ...value, ...changes })}/>*/
+  case 'address':
+    return (
+      <>
+        <div className="form-group row">
+          <label className="control-label col-md-12">CEP</label>
+          <div className="col-md-4">
+            <input type="text" className="form-control dummy-input" readOnly placeholder="00000-000" />
+          </div>
+        </div>
+
+        <div className="form-group row">
+          <label className="control-label col-md-12">Endereço</label>
+          <div className="col-md-8">
+            <textarea className="form-control dummy-input" readOnly placeholder="" />
+          </div>
+        </div>
+
+        <div className="form-group optional row">
+          <label className="control-label col-md-12">Complemento</label>
+          <div className="col-md-8">
+            <input type="text" className="form-control dummy-input" readOnly placeholder="" />
+          </div>
+        </div>
+      </>
+    )
+  case 'rating':
+    return null/*<Rating
+      value={value}
+      onChange={(changes) => onChange({ ...value, ...changes })} />*/
+  }
+
+  return null
+}
+
 let input_key = 0
 /**
  * Creates a new empty input
@@ -172,6 +257,7 @@ export function emptyInput(): Input {
     showPos: false,
     pos: '',
     shuffle: false,
+    options: []
   }
 }
 

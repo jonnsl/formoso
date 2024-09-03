@@ -45,8 +45,10 @@
         "react-dom": "^18.0.0"
     },
     "dependencies": {
+        "@types/react-beautiful-dnd": "^13.1.8",
         "bootstrap-icons": "^1.11.3",
         "classnames": "^2.5.1",
+        "react-beautiful-dnd": "^13.1.1",
         "react-textarea-autosize": "^8.5.3"
     }
 }
