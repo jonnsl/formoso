@@ -6308,6 +6308,7 @@ body {
   width: 100%;
 }
 .seamless {
+  padding: 0;
   background-color: transparent;
   border: none;
   border-bottom: 2px solid transparent;
@@ -6315,7 +6316,6 @@ body {
   outline: 0;
   overflow: hidden;
   padding-left: 5px;
-  padding: 0;
   resize: none;
   width: 100%;
 }
@@ -6418,6 +6418,56 @@ body {
 }
 .checkable.checked .bi {
   visibility: visible;
+}
+.dummy-input {
+  user-select: none;
+  background-color: #fff !important;
+  cursor: default;
+  pointer-events: none;
+}
+.option {
+  display: flex;
+  min-height: 36px;
+  align-items: flex-start;
+  background-color: #fff;
+}
+.option .grip {
+  margin-right: 5px;
+}
+.input:focus .option.draggable:hover .grip,
+.input:focus-within .option.draggable:hover .grip {
+  cursor: grab;
+  visibility: visible;
+  pointer-events: auto;
+}
+.option input[type=checkbox],
+.option input[type=radio] {
+  margin: 4px 0 0;
+  margin-top: 1px \	;
+  line-height: normal;
+}
+.input:focus input[type=text].seamless:hover,
+.input:focus-within input[type=text].seamless:hover {
+  border-bottom-color: #eee;
+}
+.input:focus input[type=text].seamless:hover:focus,
+.input:focus-within input[type=text].seamless:hover:focus {
+  border-bottom-color: #3097d1;
+}
+.add_new_option {
+  display: none;
+}
+.input:focus .add_new_option,
+.input:focus-within .add_new_option {
+  display: block;
+}
+.option button {
+  display: none;
+  color: #999;
+}
+.input:focus .option button,
+.input:focus-within .option button {
+  display: block;
 }
 /*! Bundled license information:
 
