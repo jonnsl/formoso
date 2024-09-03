@@ -182,9 +182,9 @@ function DummyInput (props: dummyInputProps): React.ReactNode {
   case 'email':
     return <input type="email" className="form-control dummy-input" readOnly />
   case 'text':
-    return <input type="text" className="form-control dummy-input" readOnly placeholder="Texto de resposta curta" />
+    return <input type="text" className="form-control dummy-input" readOnly placeholder="Short answer" />
   case 'textarea':
-    return <textarea className="form-control dummy-input" readOnly placeholder="Texto de resposta longa" />
+    return <textarea className="form-control dummy-input" readOnly placeholder="Paragraph" />
   case 'file':
     return (
       <>

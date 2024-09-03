@@ -21,8 +21,8 @@ type OptionsProps = {
 export default function Options (props: OptionsProps) {
   const { value: options, type, onChange } = props
   const {
-    defaultLabel = 'Opção %d',
-    addNewLabel = 'Adicionar Nova Opção',
+    defaultLabel = 'Option %d',
+    addNewLabel = 'Add New Option',
   } = props
 
   const previousRef = useRef<OptionItem[]>();
@@ -213,7 +213,7 @@ function Option (props: OptionProps) {
         placeholder={placeholder}
         onFocus={(e) => selectAll(e.target)}
         onChange={(e) => onChange({ ...value, label: e.target.value })} />
-      <button type="button" className="btn btn-link" onClick={onRemove} title="Excluir" disabled={undeletable}>
+      <button type="button" className="btn btn-link" onClick={onRemove} title="Remove" disabled={undeletable}>
         <span className="bi bi-x" aria-hidden="true"></span>
       </button>
     </div>
