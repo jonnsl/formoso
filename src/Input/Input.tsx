@@ -263,7 +263,7 @@ export function emptyInput(): Input {
     showPos: false,
     pos: '',
     shuffle: false,
-    options: [],
+    options: [emptyOption('Option 1')],
     size: 1,
     maxsize: '',
     acceptAll: true,
