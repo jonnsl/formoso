@@ -5,8 +5,12 @@ import TextareaAutosize from 'react-textarea-autosize'
 import InputTypes from './Types'
 import { Grip } from '../Icons'
 import OverflowMenu, { CheckableMenuItem } from '../OverflowMenu'
-import Options, { OptionItem } from './Options'
+import Options, { emptyOption, OptionItem } from './Options'
 import FileInput from './FileInput'
+import Multi from './Multi'
+
+export type Column = OptionItem
+export type Row = OptionItem
 
 export type Input = {
   key: string
@@ -27,6 +31,8 @@ export type Input = {
   maxsize: string
   acceptAll: boolean
   accept: string[]
+  rows: Row[]
+  columns: Column[]
 }
 
 type InputProps = {
@@ -164,13 +170,12 @@ export default function Input (props: InputProps): React.ReactNode {
 
 type dummyInputProps = {
   value: Input
-  onChange: any
+  onChange: (value: Input) => void
 }
 
 function DummyInput (props: dummyInputProps): React.ReactNode {
   const { value, onChange } = props
-  const { options, type, size, /*labels, scores */} = value
-  // const { labelWidth } = value
+  const { options, type, size } = value
 
   switch (type) {
   case 'radio':
@@ -204,11 +209,7 @@ function DummyInput (props: dummyInputProps): React.ReactNode {
   case 'money':
     return <input type="text" className="form-control dummy-input" disabled readOnly value="R$ 0,00" />
   case 'multi':
-    return null/*<Multi
-      labelWidth={labelWidth}
-      labels={labels}
-      scores={scores}
-      onChange={(changes = true) => onChange({ ...value, ...changes })}/>*/
+    return <Multi value={value} onChange={onChange} />
   case 'address':
     return (
       <>
@@ -267,6 +268,8 @@ export function emptyInput(): Input {
     maxsize: '',
     acceptAll: true,
     accept: [],
+    rows: [emptyOption('Row 1')],
+    columns: [emptyOption('Column 1')],
   }
 }
 

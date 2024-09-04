@@ -384,3 +384,24 @@ body {
   margin-bottom: 15px;
   margin-top: -10px;
 }
+
+.multiple-choice-grid {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+}
+.input:focus .multiple-choice-grid,
+.input:focus-within .multiple-choice-grid {
+  display: grid;
+}
+
+.input:focus .multiple-choice-preview,
+.input:focus-within .multiple-choice-preview {
+  display: none;
+}
+.multiple-choice-preview {
+  width: 100%;
+}
+.multiple-choice-preview td:not(:first-child),
+.multiple-choice-preview th {
+  text-align: center
+}
