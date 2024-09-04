@@ -8,6 +8,7 @@ import OverflowMenu, { CheckableMenuItem } from '../OverflowMenu'
 import Options, { emptyOption, OptionItem } from './Options'
 import FileInput from './FileInput'
 import Multi from './Multi'
+import RatingInput, { Rating, defaultRating } from './Rating'
 
 export type Column = OptionItem
 export type Row = OptionItem
@@ -33,6 +34,7 @@ export type Input = {
   accept: string[]
   rows: Row[]
   columns: Column[]
+  rating: Rating
 }
 
 type InputProps = {
@@ -175,7 +177,7 @@ type dummyInputProps = {
 
 function DummyInput (props: dummyInputProps): React.ReactNode {
   const { value, onChange } = props
-  const { options, type, size } = value
+  const { options, type, size, rating } = value
 
   switch (type) {
   case 'radio':
@@ -236,9 +238,9 @@ function DummyInput (props: dummyInputProps): React.ReactNode {
       </>
     )
   case 'rating':
-    return null/*<Rating
-      value={value}
-      onChange={(changes) => onChange({ ...value, ...changes })} />*/
+    return <RatingInput
+      value={rating}
+      onChange={(rating: Rating) => onChange({ ...value, rating })} />
   }
 
   return null
@@ -270,6 +272,7 @@ export function emptyInput(): Input {
     accept: [],
     rows: [emptyOption('Row 1')],
     columns: [emptyOption('Column 1')],
+    rating: defaultRating(),
   }
 }
 
