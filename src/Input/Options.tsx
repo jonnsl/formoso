@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import { reorder, replaceAt, remove } from '../Immutable'
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableStateSnapshot, DroppableProvided, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd'
 import { Grip } from '../Icons'
+import { limitMovementToYAxis } from '../DragAndDropUtils'
 
 export type OptionItem = {
   key: string
@@ -203,7 +204,7 @@ function Option (props: OptionProps) {
   const { label } = value
 
   return (
-    <div className={classnames('option', { draggable, dragging: isDragging })} ref={innerRef} {...draggableProps}>
+    <div className={classnames('option', { draggable, dragging: isDragging })} ref={innerRef} {...limitMovementToYAxis(draggableProps)}>
       <Grip className="grip" {...dragHandleProps} />
       { (type === 'radio' || type === 'checkbox') ? <input type={type} className="custom-control-input" checked={false} readOnly tabIndex={-1} /> : <span>{`${i}. `}</span> }
       <input
