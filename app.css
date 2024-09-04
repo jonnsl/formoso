@@ -6531,6 +6531,21 @@ body {
 .multiple-choice-preview th {
   text-align: center;
 }
+.table-ratings {
+  table-layout: fixed;
+}
+.table-ratings th,
+.table-ratings td,
+.table-ratings textarea {
+  text-align: center;
+}
+.table-ratings tfoot {
+  display: none;
+}
+.input:focus .table-ratings tfoot,
+.input:focus-within .table-ratings tfoot {
+  display: table-footer-group;
+}
 /*! Bundled license information:
 
 bootstrap-icons/font/bootstrap-icons.css:
