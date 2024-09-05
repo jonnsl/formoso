@@ -3,7 +3,7 @@ import React from "react"
 
 type AutoCompleteOptionsProps = React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>
 
-function AutoCompleteOptions (props: AutoCompleteOptionsProps): React.ReactNode {
+export default function AutoCompleteOptions (props: AutoCompleteOptionsProps): React.ReactNode {
   return (
     <select {...props}>
       <option value="">(Default)</option>

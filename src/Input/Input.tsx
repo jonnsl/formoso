@@ -11,6 +11,7 @@ import FileInput from './FileInput'
 import Multi from './Multi'
 import RatingInput, { Rating, defaultRating } from './Rating'
 import ValidationRulesForm, { ValidationRules } from './ValidationRules'
+import AdvancedOptionsForm, { AdvancedOptions } from './AdvancedOptions'
 
 export type Column = OptionItem
 export type Row = OptionItem
@@ -38,6 +39,7 @@ export type Input = {
   columns: Column[]
   rating: Rating
   validation: ValidationRules
+  advanced: AdvancedOptions
 }
 
 type InputProps = {
@@ -49,9 +51,13 @@ type InputProps = {
 
 export default function Input (props: InputProps): React.ReactNode {
   const [validationOptionsModalOpen, setValidationOptionsModalOpen] = useState(false)
+  const [advancedOptionsModalOpen, setAdvancedOptionsModalOpen] = useState(false)
   const { onChange, onDuplicate, onRemove } = props
   const { label, type, condition, isConditional, required } = props.input
   const { showPre, showDescription, showPos, shuffle, pre, pos, help } = props.input
+
+  const closeValidationOptionsModal = () => setValidationOptionsModalOpen(false)
+  const closeAdvancedOptionsModal = () => setAdvancedOptionsModalOpen(false)
 
   return (
     <div tabIndex={0} className="input">
@@ -127,7 +133,7 @@ export default function Input (props: InputProps): React.ReactNode {
               disabled={(['text', 'textarea', 'number', 'date']).indexOf(type) === -1}>
               <i className="bi bi-asterisk"></i>
             </button>
-            <button type="button" className="btn btn-link" onClick={noop} title="Advanced Options">
+            <button type="button" className="btn btn-link" onClick={() => setAdvancedOptionsModalOpen(true)} title="Advanced Options">
               <i className="bi bi-gear"></i>
             </button>
 
@@ -177,14 +183,30 @@ export default function Input (props: InputProps): React.ReactNode {
           contentLabel="Validation Rules">
             <div className="modal-header">
               <h4 className="modal-title">Validation Rules</h4>
-              <button onClick={() => setValidationOptionsModalOpen(false)} type="button" className="btn-close" aria-label="Close"></button>
+              <button onClick={closeValidationOptionsModal} type="button" className="btn-close" aria-label="Close"></button>
             </div>
             <div className="modal-body form-horizontal">
               <ValidationRulesForm type={type} value={props.input.validation} onChange={(validation) => onChange({ ...props.input, validation})} />
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={() => setValidationOptionsModalOpen(false)}>Ok</button>
+              <button type="button" className="btn btn-primary" onClick={closeValidationOptionsModal}>Ok</button>
             </div>
+        </Modal>
+
+        <Modal
+          isOpen={advancedOptionsModalOpen}
+          contentElement={renderModalContent}
+          contentLabel="Advanced Options">
+          <div className="modal-header">
+            <h4 className="modal-title">Advanced Options</h4>
+            <button onClick={closeAdvancedOptionsModal} type="button" className="btn-close" aria-label="Close"></button>
+          </div>
+          <div className="modal-body form-horizontal">
+            <AdvancedOptionsForm type={type} value={props.input.advanced} onChange={(advanced) => onChange({ ...props.input, advanced})} />
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-default" onClick={closeAdvancedOptionsModal}>Ok</button>
+          </div>
         </Modal>
     </div>
   )
@@ -311,7 +333,15 @@ export function emptyInput(): Input {
       min: '',
       max: '',
       pattern: '',
-    }
+    },
+    advanced: {
+      name: '',
+      nameSet: false,
+      placeholder: '',
+      title: '',
+      autocomplete: '',
+      spellcheck: '',
+    },
   }
 }
 
@@ -324,5 +354,3 @@ export function duplicateInput(input: Input): Input {
     key: `${input_key++}`,
   }
 }
-
-function noop() {}
