@@ -11,11 +11,12 @@ export type Page = {
 export type FormPageProps = {
   page: Page
   onSectionFocus: (el: HTMLElement, index: number) => void
+  onInputFocus: (index: number) => void
   onChange: (value: Page) => void
 }
 
 export default function FormPage(props: FormPageProps): ReactNode {
-  const { page, onChange, onSectionFocus } = props
+  const { page, onChange, onSectionFocus, onInputFocus } = props
 
   const renderSection = (section: Section, index: number): ReactNode => {
     const onSectionChange = (section: Section): void => {
@@ -56,6 +57,7 @@ export default function FormPage(props: FormPageProps): ReactNode {
         title={`Section ${index + 1} of ${length}`}
         section={section}
         onFocus={handleSectionFocus}
+        onInputFocus={onInputFocus}
         onDuplicate={onDuplicate}
         onRemove={length > 1 ? onRemove : null}
         onMerge={index > 0 ? onMerge : null}

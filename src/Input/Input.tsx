@@ -45,6 +45,7 @@ export type Input = {
 type InputProps = {
   input: Input
   onChange: (input: Input) => void
+  onFocus: () => void
   onDuplicate: () => void
   onRemove: () => void
 }
@@ -52,7 +53,7 @@ type InputProps = {
 export default function Input (props: InputProps): React.ReactNode {
   const [validationOptionsModalOpen, setValidationOptionsModalOpen] = useState(false)
   const [advancedOptionsModalOpen, setAdvancedOptionsModalOpen] = useState(false)
-  const { onChange, onDuplicate, onRemove } = props
+  const { onChange, onDuplicate, onRemove, onFocus } = props
   const { label, type, condition, isConditional, required } = props.input
   const { showPre, showDescription, showPos, shuffle, pre, pos, help } = props.input
 
@@ -60,7 +61,7 @@ export default function Input (props: InputProps): React.ReactNode {
   const closeAdvancedOptionsModal = () => setAdvancedOptionsModalOpen(false)
 
   return (
-    <div tabIndex={0} className="input">
+    <div tabIndex={0} className="input" onFocus={onFocus}>
       <div className="grip-row">
         <Grip className="grip" />
       </div>

@@ -22,6 +22,7 @@ export default function Formoso(props: FormosoProps): ReactNode {
   const sectionRef = useRef<HTMLElement | null>(null)
   const activePage = useRef<number>(0)
   const activeSection = useRef<number>(0)
+  const activeInput = useRef<number>(0)
 
   const handleScroll = (): void => {
     if (sectionRef.current && sideBarRef.current && sideBarContainerRef.current) {
@@ -36,6 +37,10 @@ export default function Formoso(props: FormosoProps): ReactNode {
     }
     activeSection.current = activeSectionIndex
     activePage.current = activePageIndex
+  }
+
+  const onInputFocus = (inputIndex: number): void => {
+    activeInput.current = inputIndex
   }
 
   useEffect(() => {
@@ -80,6 +85,7 @@ export default function Formoso(props: FormosoProps): ReactNode {
         <FormPage
           page={page}
           onSectionFocus={onSectionFocus}
+          onInputFocus={onInputFocus}
           onChange={onPageChange} />
         <div className="form-page-break">
           <button
@@ -100,7 +106,7 @@ export default function Formoso(props: FormosoProps): ReactNode {
 
   const onNewQuestion = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    onChange(addNewQuestion(pages, activePage.current, activeSection.current))
+    onChange(addNewQuestion(pages, activePage.current, activeSection.current, activeInput.current))
   }
 
   return (
@@ -186,7 +192,7 @@ function addNewSection (pages: Page[], pageIndex: number, sectionIndex: number):
 /**
  * Adds a new Question to a given section on a given page
  */
-function addNewQuestion (pages: Page[], pageIndex: number, sectionIndex: number): Page[] {
+function addNewQuestion (pages: Page[], pageIndex: number, sectionIndex: number, inputIndex: number): Page[] {
   const oldPage = pages[pageIndex]
   if (oldPage === undefined) {
     return pages
@@ -198,7 +204,7 @@ function addNewQuestion (pages: Page[], pageIndex: number, sectionIndex: number)
 
   const newSection: Section = {
     ...oldSection,
-    inputs: oldSection.inputs.concat(emptyInput())
+    inputs: splice(oldSection.inputs, inputIndex + 1, 0, emptyInput()),
   }
   const newPage: Page = {
     ...oldPage,

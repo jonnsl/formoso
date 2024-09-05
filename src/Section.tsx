@@ -16,6 +16,7 @@ export type SectionProps = {
   title: string,
   section: Section,
   onFocus: (el: HTMLElement) => void
+  onInputFocus: (index: number) => void
   onChange: (value: Section) => void
   onDuplicate: () => void
   onRemove: (() => void) | null
@@ -23,7 +24,7 @@ export type SectionProps = {
 }
 
 export default function Section(props: SectionProps): ReactNode {
-  const { section, onFocus, onChange, onDuplicate, onRemove, onMerge } = props
+  const { section, onFocus, onChange, onDuplicate, onRemove, onMerge, onInputFocus } = props
   const divRef = useRef<HTMLDivElement>(null)
 
   return (
@@ -56,6 +57,7 @@ export default function Section(props: SectionProps): ReactNode {
       <div className="panel-body">
         <InputList
           inputs={section.inputs}
+          onInputFocus={onInputFocus}
           onChange={(inputs) => onChange({ ...section, inputs })} />
       </div>
     </div>
