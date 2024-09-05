@@ -26,7 +26,7 @@ export default function Options (props: OptionsProps) {
     addNewLabel = 'Add New Option',
   } = props
 
-  const previousRef = useRef<OptionItem[]>();
+  const previousRef = useRef<OptionItem[]>()
   const optionsRef = useRef<HTMLDivElement>()
 
   const focusOption = (index: number) => {
