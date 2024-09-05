@@ -12,27 +12,30 @@ export type FormosoProps = {
 
 export default function Formoso(props: FormosoProps): ReactNode {
   const { pages, onChange } = props
+
+  // Sidebar position
   const [sideBarPosition, setSideBarPosition] = useState<number>(22)
   const sideBarContainerRef = useRef<ElementRef<"div">>(null)
   const sideBarRef = useRef<ElementRef<"div">>(null)
+
   // Keeps track of the currently active/focused section
-  const [sectionRef, setSectionRef] = useState<HTMLElement | null>(null)
-  const [activePage, setActivePage] = useState<number>(0)
-  const [activeSection, setActiveSection] = useState<number>(0)
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const activePage = useRef<number>(0)
+  const activeSection = useRef<number>(0)
 
   const handleScroll = (): void => {
-    if (sectionRef && sideBarRef.current && sideBarContainerRef.current) {
-      setSideBarPosition(calculateSidebarPosition(sectionRef, sideBarRef.current, sideBarContainerRef.current))
+    if (sectionRef.current && sideBarRef.current && sideBarContainerRef.current) {
+      setSideBarPosition(calculateSidebarPosition(sectionRef.current, sideBarRef.current, sideBarContainerRef.current))
     }
   }
 
   const handleActiveSectionChange = (el: HTMLElement, activeSectionIndex: number, activePageIndex: number): void => {
     if (el && sideBarRef.current && sideBarContainerRef.current) {
       setSideBarPosition(calculateSidebarPosition(el, sideBarRef.current, sideBarContainerRef.current))
-      setSectionRef(el)
+      sectionRef.current = el
     }
-    setActiveSection(activeSectionIndex)
-    setActivePage(activePageIndex)
+    activeSection.current = activeSectionIndex
+    activePage.current = activePageIndex
   }
 
   useEffect(() => {
@@ -92,12 +95,12 @@ export default function Formoso(props: FormosoProps): ReactNode {
 
   const onNewSection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    onChange(addNewSection(pages, activePage, activeSection))
+    onChange(addNewSection(pages, activePage.current, activeSection.current))
   }
 
   const onNewQuestion = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    onChange(addNewQuestion(pages, activePage, activeSection))
+    onChange(addNewQuestion(pages, activePage.current, activeSection.current))
   }
 
   return (
