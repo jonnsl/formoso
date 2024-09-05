@@ -1,7 +1,8 @@
 
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import FormSection, { Section, emptySection, duplicateSection, mergeSections } from './Section'
 import { remove, replaceAt, splice } from './Immutable'
+import useAutoFocus from './AutoFocusHook'
 
 export type Page = {
   key: string
@@ -17,6 +18,10 @@ export type FormPageProps = {
 
 export default function FormPage(props: FormPageProps): ReactNode {
   const { page, onChange, onSectionFocus, onInputFocus } = props
+  const { sections } = page
+
+  const listRef = useRef<HTMLDivElement>(null)
+  useAutoFocus(listRef, sections)
 
   const renderSection = (section: Section, index: number): ReactNode => {
     const onSectionChange = (section: Section): void => {
@@ -65,7 +70,11 @@ export default function FormPage(props: FormPageProps): ReactNode {
     )
   }
 
-  return page.sections.map(renderSection)
+  return (
+    <div ref={listRef}>
+      { page.sections.map(renderSection) }
+    </div>
+  )
 }
 
 let page_key = 0
