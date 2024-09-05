@@ -421,3 +421,25 @@ body {
 .input:focus-within .table-ratings tfoot {
   display: table-footer-group;
 }
+
+body.ReactModal__Body--open {
+  overflow: hidden;
+}
+.ReactModal__Overlay {
+  overflow-y: scroll;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  z-index: 2000;
+}
+.modal-open {
+  display: block;
+}
+
+.form-group {
+  display: flex;
+  margin-bottom: 15px;
+}
+.form-group label {
+  text-align: right;
+  padding: 7px 15px 0 0;
+  color: #636b6f;
+}

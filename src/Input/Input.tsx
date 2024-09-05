@@ -1,5 +1,6 @@
 
-import React from 'react'
+import React, { useState } from 'react'
+import Modal from 'react-modal'
 import classnames from 'classnames'
 import TextareaAutosize from 'react-textarea-autosize'
 import InputTypes from './Types'
@@ -9,6 +10,7 @@ import Options, { emptyOption, OptionItem } from './Options'
 import FileInput from './FileInput'
 import Multi from './Multi'
 import RatingInput, { Rating, defaultRating } from './Rating'
+import ValidationRulesForm, { ValidationRules } from './ValidationRules'
 
 export type Column = OptionItem
 export type Row = OptionItem
@@ -35,6 +37,7 @@ export type Input = {
   rows: Row[]
   columns: Column[]
   rating: Rating
+  validation: ValidationRules
 }
 
 type InputProps = {
@@ -45,6 +48,7 @@ type InputProps = {
 }
 
 export default function Input (props: InputProps): React.ReactNode {
+  const [validationOptionsModalOpen, setValidationOptionsModalOpen] = useState(false)
   const { onChange, onDuplicate, onRemove } = props
   const { label, type, condition, isConditional, required } = props.input
   const { showPre, showDescription, showPos, shuffle, pre, pos, help } = props.input
@@ -118,7 +122,7 @@ export default function Input (props: InputProps): React.ReactNode {
             <button
               type="button"
               className="btn btn-link"
-              onClick={noop}
+              onClick={() => setValidationOptionsModalOpen(true)}
               title="Validations"
               disabled={(['text', 'textarea', 'number', 'date']).indexOf(type) === -1}>
               <i className="bi bi-asterisk"></i>
@@ -166,6 +170,34 @@ export default function Input (props: InputProps): React.ReactNode {
             </OverflowMenu>
           </div>
         </div>
+
+        <Modal
+          isOpen={validationOptionsModalOpen}
+          contentElement={renderModalContent}
+          contentLabel="Validation Rules">
+            <div className="modal-header">
+              <h4 className="modal-title">Validation Rules</h4>
+              <button onClick={() => setValidationOptionsModalOpen(false)} type="button" className="btn-close" aria-label="Close"></button>
+            </div>
+            <div className="modal-body form-horizontal">
+              <ValidationRulesForm type={type} value={props.input.validation} onChange={(validation) => onChange({ ...props.input, validation})} />
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-primary" onClick={() => setValidationOptionsModalOpen(false)}>Ok</button>
+            </div>
+        </Modal>
+    </div>
+  )
+}
+
+function renderModalContent(_props: React.ComponentPropsWithRef<"div">, children: React.ReactNode): React.ReactElement {
+  return (
+    <div className="modal modal-open">
+      <div className="modal-dialog">
+        <div className="modal-content">
+          { children }
+        </div>
+      </div>
     </div>
   )
 }
@@ -273,6 +305,13 @@ export function emptyInput(): Input {
     rows: [emptyOption('Row 1')],
     columns: [emptyOption('Column 1')],
     rating: defaultRating(),
+    validation: {
+      minlength: '',
+      maxlength: '',
+      min: '',
+      max: '',
+      pattern: '',
+    }
   }
 }
 
