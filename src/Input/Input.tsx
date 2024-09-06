@@ -12,6 +12,7 @@ import Multi from './Multi'
 import RatingInput, { Rating, defaultRating } from './Rating'
 import ValidationRulesForm, { ValidationRules } from './ValidationRules'
 import AdvancedOptionsForm, { AdvancedOptions } from './AdvancedOptions'
+import { DraggableProvided } from 'react-beautiful-dnd'
 
 export type Column = OptionItem
 export type Row = OptionItem
@@ -43,6 +44,10 @@ export type Input = {
 }
 
 type InputProps = {
+  innerRef: DraggableProvided['innerRef']
+  draggableProps: DraggableProvided['draggableProps']
+  dragHandleProps: DraggableProvided['dragHandleProps']
+  isDragging: boolean
   input: Input
   onChange: (input: Input) => void
   onFocus: () => void
@@ -53,6 +58,7 @@ type InputProps = {
 export default function Input (props: InputProps): React.ReactNode {
   const [validationOptionsModalOpen, setValidationOptionsModalOpen] = useState(false)
   const [advancedOptionsModalOpen, setAdvancedOptionsModalOpen] = useState(false)
+  const { innerRef, draggableProps, dragHandleProps, isDragging } = props
   const { onChange, onDuplicate, onRemove, onFocus } = props
   const { label, type, condition, isConditional, required } = props.input
   const { showPre, showDescription, showPos, shuffle, pre, pos, help } = props.input
@@ -61,9 +67,9 @@ export default function Input (props: InputProps): React.ReactNode {
   const closeAdvancedOptionsModal = () => setAdvancedOptionsModalOpen(false)
 
   return (
-    <div tabIndex={0} className="input" onFocus={onFocus}>
+    <div tabIndex={0} className={classnames('input', `input_${type}`, { dragging: isDragging })} onFocus={onFocus} ref={innerRef} {...draggableProps}>
       <div className="grip-row">
-        <Grip className="grip" />
+        <Grip className="grip" {...dragHandleProps} />
       </div>
 
       { showPre ?

@@ -1,7 +1,7 @@
 
 import { RefObject, useEffect, useRef } from 'react'
 
-export default function useAutoFocus (container: RefObject<HTMLElement>, items: unknown[]): void {
+export default function useAutoFocus (container: RefObject<HTMLElement | undefined>, items: unknown[]): void {
   const previousRef = useRef<unknown[]>()
 
   const focusItem = (index: number) => {

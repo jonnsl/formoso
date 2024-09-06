@@ -57,6 +57,7 @@ export default function Section(props: SectionProps): ReactNode {
       <div className="panel-body">
         <InputList
           inputs={section.inputs}
+          listId={section.key}
           onInputFocus={onInputFocus}
           onChange={(inputs) => onChange({ ...section, inputs })} />
       </div>

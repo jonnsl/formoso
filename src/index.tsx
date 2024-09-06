@@ -2,8 +2,8 @@
 import React, { ElementRef, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import FormPage, { emptyPage, Page } from './Page'
 import { remove, replaceAt, splice } from './Immutable'
-import { emptySection, Section } from './Section'
-import { emptyInput } from './Input/Input'
+import { pickAndPlaceInputByKeys, addNewQuestion, addNewSection } from './ImmutableOperations'
+import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 
 export type FormosoProps = {
   pages: Page[]
@@ -49,6 +49,34 @@ export default function Formoso(props: FormosoProps): ReactNode {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [handleScroll])
+
+
+  const onDragEnd = (result: DropResult) => {
+    if (result.combine) {
+      return
+    }
+
+    // dropped nowhere
+    if (!result.destination) {
+      return
+    }
+
+    const { source, destination } = result
+
+    // did not move anywhere - can bail early
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return
+    }
+
+    if (result.type === 'INPUT') {
+      const inputSourceIdx = source.index
+      const inputDestIdx = destination.index
+      onChange(pickAndPlaceInputByKeys(pages, source.droppableId, destination.droppableId, inputSourceIdx, inputDestIdx))
+    }
+  }
 
   const renderPage = (page: Page, index: number): ReactNode => {
     const onPageChange = (page: Page): void => {
@@ -112,7 +140,9 @@ export default function Formoso(props: FormosoProps): ReactNode {
   return (
     <div className="row">
       <div className="col-md-11">
-        { pages.map(renderPage) }
+        <DragDropContext onDragEnd={onDragEnd}>
+          { pages.map(renderPage) }
+        </DragDropContext>
       </div>
 
       <div className="col-md-1 side_panel_container" ref={sideBarContainerRef}>
@@ -172,43 +202,4 @@ function calculateSidebarPosition (section: HTMLElement, sidebar: HTMLElement, s
   // return Math.min(section.offsetTop, document.body.offsetHeight - sidebarContainer.offsetTop - sidebarContainer.offsetHeight)
 
   return section.offsetTop
-}
-
-/**
- * Adds a new Section to a given page after a given section
- */
-function addNewSection (pages: Page[], pageIndex: number, sectionIndex: number): Page[] {
-  const oldPage = pages[pageIndex]
-  if (oldPage === undefined) {
-    return pages
-  }
-  const newPage = {
-    ...oldPage,
-    sections: splice(oldPage.sections, sectionIndex + 1, 0, emptySection())
-  }
-  return replaceAt(pages, pageIndex, newPage)
-}
-
-/**
- * Adds a new Question to a given section on a given page
- */
-function addNewQuestion (pages: Page[], pageIndex: number, sectionIndex: number, inputIndex: number): Page[] {
-  const oldPage = pages[pageIndex]
-  if (oldPage === undefined) {
-    return pages
-  }
-  const oldSection = oldPage.sections[sectionIndex]
-  if (oldSection === undefined) {
-    return pages
-  }
-
-  const newSection: Section = {
-    ...oldSection,
-    inputs: splice(oldSection.inputs, inputIndex + 1, 0, emptyInput()),
-  }
-  const newPage: Page = {
-    ...oldPage,
-    sections: replaceAt(oldPage.sections, sectionIndex, newSection)
-  }
-  return replaceAt(pages, pageIndex, newPage)
 }
