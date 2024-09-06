@@ -23582,6 +23582,66 @@
     }
   });
 
+  // node_modules/classnames/index.js
+  var require_classnames = __commonJS({
+    "node_modules/classnames/index.js"(exports, module) {
+      (function() {
+        "use strict";
+        var hasOwn = {}.hasOwnProperty;
+        function classNames() {
+          var classes = "";
+          for (var i = 0; i < arguments.length; i++) {
+            var arg = arguments[i];
+            if (arg) {
+              classes = appendClass(classes, parseValue(arg));
+            }
+          }
+          return classes;
+        }
+        function parseValue(arg) {
+          if (typeof arg === "string" || typeof arg === "number") {
+            return arg;
+          }
+          if (typeof arg !== "object") {
+            return "";
+          }
+          if (Array.isArray(arg)) {
+            return classNames.apply(null, arg);
+          }
+          if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes("[native code]")) {
+            return arg.toString();
+          }
+          var classes = "";
+          for (var key in arg) {
+            if (hasOwn.call(arg, key) && arg[key]) {
+              classes = appendClass(classes, key);
+            }
+          }
+          return classes;
+        }
+        function appendClass(value, newClass) {
+          if (!newClass) {
+            return value;
+          }
+          if (value) {
+            return value + " " + newClass;
+          }
+          return value + newClass;
+        }
+        if (typeof module !== "undefined" && module.exports) {
+          classNames.default = classNames;
+          module.exports = classNames;
+        } else if (typeof define === "function" && typeof define.amd === "object" && define.amd) {
+          define("classnames", [], function() {
+            return classNames;
+          });
+        } else {
+          window.classNames = classNames;
+        }
+      })();
+    }
+  });
+
   // node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js
   var require_react_is_development = __commonJS({
     "node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js"(exports) {
@@ -25831,66 +25891,6 @@
     }
   });
 
-  // node_modules/classnames/index.js
-  var require_classnames = __commonJS({
-    "node_modules/classnames/index.js"(exports, module) {
-      (function() {
-        "use strict";
-        var hasOwn = {}.hasOwnProperty;
-        function classNames() {
-          var classes = "";
-          for (var i = 0; i < arguments.length; i++) {
-            var arg = arguments[i];
-            if (arg) {
-              classes = appendClass(classes, parseValue(arg));
-            }
-          }
-          return classes;
-        }
-        function parseValue(arg) {
-          if (typeof arg === "string" || typeof arg === "number") {
-            return arg;
-          }
-          if (typeof arg !== "object") {
-            return "";
-          }
-          if (Array.isArray(arg)) {
-            return classNames.apply(null, arg);
-          }
-          if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes("[native code]")) {
-            return arg.toString();
-          }
-          var classes = "";
-          for (var key in arg) {
-            if (hasOwn.call(arg, key) && arg[key]) {
-              classes = appendClass(classes, key);
-            }
-          }
-          return classes;
-        }
-        function appendClass(value, newClass) {
-          if (!newClass) {
-            return value;
-          }
-          if (value) {
-            return value + " " + newClass;
-          }
-          return value + newClass;
-        }
-        if (typeof module !== "undefined" && module.exports) {
-          classNames.default = classNames;
-          module.exports = classNames;
-        } else if (typeof define === "function" && typeof define.amd === "object" && define.amd) {
-          define("classnames", [], function() {
-            return classNames;
-          });
-        } else {
-          window.classNames = classNames;
-        }
-      })();
-    }
-  });
-
   // node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js
   var require_react_is_development2 = __commonJS({
     "node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js"(exports) {
@@ -26359,9 +26359,11 @@
 
   // src/Page.tsx
   var import_react26 = __toESM(require_react());
+  var import_classnames7 = __toESM(require_classnames());
 
   // src/Section.tsx
   var import_react25 = __toESM(require_react());
+  var import_classnames6 = __toESM(require_classnames());
 
   // node_modules/@babel/runtime/helpers/esm/extends.js
   function _extends() {
@@ -35927,7 +35929,7 @@
   var input_key = 0;
   function emptyInput() {
     return {
-      key: `${input_key++}`,
+      key: `INPUT_${input_key++}`,
       label: "",
       type: "text",
       isConditional: false,
@@ -35968,7 +35970,7 @@
   function duplicateInput(input) {
     return {
       ...input,
-      key: `${input_key++}`
+      key: `INPUT_${input_key++}`
     };
   }
 
@@ -36070,16 +36072,24 @@
 
   // src/Section.tsx
   function Section(props) {
+    const { innerRef, draggableProps, dragHandleProps, isDragging } = props;
     const { section, onFocus, onChange, onDuplicate, onRemove, onMerge, onInputFocus } = props;
-    const divRef = (0, import_react25.useRef)(null);
+    const divRef = (0, import_react25.useRef)();
+    const legacyRef = (element) => {
+      if (element) {
+        divRef.current = element;
+      }
+      innerRef(element);
+    };
     return /* @__PURE__ */ import_react25.default.createElement(
       "div",
       {
-        className: "panel panel-default section",
-        ref: divRef,
-        onFocus: () => divRef.current ? onFocus(divRef.current) : null
+        className: (0, import_classnames6.default)("panel panel-default section", { dragging: isDragging }),
+        ref: legacyRef,
+        onFocus: () => divRef.current ? onFocus(divRef.current) : null,
+        ...draggableProps
       },
-      /* @__PURE__ */ import_react25.default.createElement("div", { className: "section-top-bar" }, /* @__PURE__ */ import_react25.default.createElement("div", { className: "section-info" }, /* @__PURE__ */ import_react25.default.createElement(Grip, { className: "grip" }), /* @__PURE__ */ import_react25.default.createElement("span", null, props.title), /* @__PURE__ */ import_react25.default.createElement(Triangle, { className: "top-triangle" })), /* @__PURE__ */ import_react25.default.createElement("div", { className: "section-overflow-menu" }, /* @__PURE__ */ import_react25.default.createElement(OverflowMenu, null, /* @__PURE__ */ import_react25.default.createElement(MenuItem, { onClick: onDuplicate }, "Duplicar"), onRemove ? /* @__PURE__ */ import_react25.default.createElement(MenuItem, { onClick: onRemove }, "Excluir") : null, onMerge ? /* @__PURE__ */ import_react25.default.createElement(MenuItem, { onClick: onMerge }, "Mesclar com a se\xE7\xE3o acima") : null))),
+      /* @__PURE__ */ import_react25.default.createElement("div", { className: "section-top-bar" }, /* @__PURE__ */ import_react25.default.createElement("div", { className: "section-info" }, /* @__PURE__ */ import_react25.default.createElement(Grip, { className: "grip", ...dragHandleProps }), /* @__PURE__ */ import_react25.default.createElement("span", null, props.title), /* @__PURE__ */ import_react25.default.createElement(Triangle, { className: "top-triangle" })), /* @__PURE__ */ import_react25.default.createElement("div", { className: "section-overflow-menu" }, /* @__PURE__ */ import_react25.default.createElement(OverflowMenu, null, /* @__PURE__ */ import_react25.default.createElement(MenuItem, { onClick: onDuplicate }, "Duplicar"), onRemove ? /* @__PURE__ */ import_react25.default.createElement(MenuItem, { onClick: onRemove }, "Excluir") : null, onMerge ? /* @__PURE__ */ import_react25.default.createElement(MenuItem, { onClick: onMerge }, "Mesclar com a se\xE7\xE3o acima") : null))),
       /* @__PURE__ */ import_react25.default.createElement("div", { className: "panel-heading" }, /* @__PURE__ */ import_react25.default.createElement(
         index2,
         {
@@ -36104,7 +36114,7 @@
   var section_key = 0;
   function emptySection() {
     return {
-      key: `${section_key++}`,
+      key: `SECTION_${section_key++}`,
       title: "",
       inputs: [emptyInput()]
     };
@@ -36112,12 +36122,12 @@
   function duplicateSection(section) {
     return {
       ...section,
-      key: `${section_key++}`
+      key: `SECTION_${section_key++}`
     };
   }
   function mergeSections(a, b) {
     return {
-      key: `${section_key++}`,
+      key: `SECTION_${section_key++}`,
       title: a.title,
       inputs: a.inputs.concat(b.inputs)
     };
@@ -36127,7 +36137,7 @@
   function FormPage(props) {
     const { page, onChange, onSectionFocus, onInputFocus } = props;
     const { sections } = page;
-    const listRef = (0, import_react26.useRef)(null);
+    const listRef = (0, import_react26.useRef)();
     useAutoFocus(listRef, sections);
     const renderSection = (section, index3) => {
       const onSectionChange = (section2) => {
@@ -36155,10 +36165,14 @@
         onSectionFocus(el, index3);
       };
       const length = props.page.sections.length;
-      return /* @__PURE__ */ import_react26.default.createElement(
+      return (provided, snapshot) => /* @__PURE__ */ import_react26.default.createElement(
         Section,
         {
           key: section.key,
+          innerRef: provided.innerRef,
+          draggableProps: provided.draggableProps,
+          dragHandleProps: provided.dragHandleProps,
+          isDragging: snapshot.isDragging,
           title: `Section ${index3 + 1} of ${length}`,
           section,
           onFocus: handleSectionFocus,
@@ -36170,12 +36184,35 @@
         }
       );
     };
-    return /* @__PURE__ */ import_react26.default.createElement("div", { ref: listRef }, page.sections.map(renderSection));
+    const renderDraggableSection = (section, index3) => {
+      return /* @__PURE__ */ import_react26.default.createElement(
+        PublicDraggable,
+        {
+          key: section.key,
+          draggableId: section.key,
+          index: index3
+        },
+        renderSection(section, index3)
+      );
+    };
+    const renderSections = (provided, snapshot) => {
+      const className = (0, import_classnames7.default)("inputs", {
+        "dragging-over": snapshot.isDraggingOver
+      });
+      const legacyRef = (element) => {
+        if (element) {
+          listRef.current = element;
+        }
+        provided.innerRef(element);
+      };
+      return /* @__PURE__ */ import_react26.default.createElement("div", { className, ref: legacyRef, ...provided.droppableProps }, sections.map(renderDraggableSection), provided.placeholder);
+    };
+    return /* @__PURE__ */ import_react26.default.createElement(ConnectedDroppable, { droppableId: page.key, type: "SECTION" }, renderSections);
   }
   var page_key = 0;
   function emptyPage() {
     return {
-      key: `${page_key++}`,
+      key: `PAGE_${page_key++}`,
       sections: [emptySection()]
     };
   }
@@ -36210,6 +36247,51 @@
       sections: replaceAt(oldPage.sections, sectionIndex, newSection)
     };
     return replaceAt(pages, pageIndex, newPage);
+  }
+  function pickAndPlaceSectionByKeys(pages, pageSourceKey, pageDestKey, sectionSourceIdx, sectionDestIdx) {
+    const pageSourceIdx = findPage(pages, pageSourceKey);
+    const pageDestIdx = findPage(pages, pageDestKey);
+    return pickAndPlaceSection(pages, pageSourceIdx, pageDestIdx, sectionSourceIdx, sectionDestIdx);
+  }
+  function pickAndPlaceSection(pages, pageSourceIdx, pageDestIdx, sectionSourceIdx, sectionDestIdx) {
+    var _a;
+    const pick3 = (_a = pages[pageSourceIdx]) == null ? void 0 : _a.sections[sectionSourceIdx];
+    if (pick3 === void 0) {
+      throw new Error("Source input not found!");
+    }
+    const oldSourcePage = pages[pageSourceIdx];
+    if (oldSourcePage === void 0) {
+      throw new Error("Source page not found!");
+    }
+    if (pageSourceIdx === pageDestIdx) {
+      const sectionsWithoutMovedSection = remove(oldSourcePage.sections, sectionSourceIdx);
+      const newPage = {
+        ...oldSourcePage,
+        sections: splice(sectionsWithoutMovedSection, sectionDestIdx, 0, pick3)
+      };
+      return replaceAt(pages, pageSourceIdx, newPage);
+    }
+    const newSourcePage = {
+      ...oldSourcePage,
+      sections: remove(oldSourcePage.sections, sectionSourceIdx)
+    };
+    const oldDestPage = pages[pageDestIdx];
+    if (oldDestPage === void 0) {
+      throw new Error("Dest page not found!");
+    }
+    const newDestPage = {
+      ...oldDestPage,
+      sections: splice(oldDestPage.sections, sectionDestIdx, 0, pick3)
+    };
+    return pages.map(function(page, index3) {
+      if (index3 === pageSourceIdx) {
+        return newSourcePage;
+      } else if (index3 === pageDestIdx) {
+        return newDestPage;
+      } else {
+        return page;
+      }
+    });
   }
   function pickAndPlaceInputByKeys(pages, sectionSourceKey, sectionDestKey, inputSourceIdx, inputDestIdx) {
     const [pageSourceIdx, sectionSourceIdx] = findPageAndSection(pages, sectionSourceKey);
@@ -36323,6 +36405,18 @@
     }
     throw new Error("Section not found!");
   }
+  function findPage(pages, pageKey) {
+    for (let i = 0, l = pages.length; i < l; i++) {
+      const page = pages[i];
+      if (page === void 0) {
+        throw new Error("");
+      }
+      if (page.key === pageKey) {
+        return i;
+      }
+    }
+    throw new Error("Page not found!");
+  }
 
   // src/index.tsx
   function Formoso(props) {
@@ -36371,6 +36465,10 @@
         const inputSourceIdx = source.index;
         const inputDestIdx = destination.index;
         onChange(pickAndPlaceInputByKeys(pages, source.droppableId, destination.droppableId, inputSourceIdx, inputDestIdx));
+      } else if (result.type === "SECTION") {
+        const sectionSourceIdx = source.index;
+        const sectionDestIdx = destination.index;
+        onChange(pickAndPlaceSectionByKeys(pages, source.droppableId, destination.droppableId, sectionSourceIdx, sectionDestIdx));
       }
     };
     const renderPage = (page, index3) => {
@@ -36505,6 +36603,13 @@ react-dom/cjs/react-dom.development.js:
    * @license Modernizr 3.0.0pre (Custom Build) | MIT
    *)
 
+classnames/index.js:
+  (*!
+  	Copyright (c) 2018 Jed Watson.
+  	Licensed under the MIT License (MIT), see
+  	http://jedwatson.github.io/classnames
+  *)
+
 react-is/cjs/react-is.development.js:
   (** @license React v16.13.1
    * react-is.development.js
@@ -36540,13 +36645,6 @@ exenv/index.js:
     Copyright (c) 2015 Jed Watson.
     Based on code that is Copyright 2013-2015, Facebook, Inc.
     All rights reserved.
-  *)
-
-classnames/index.js:
-  (*!
-  	Copyright (c) 2018 Jed Watson.
-  	Licensed under the MIT License (MIT), see
-  	http://jedwatson.github.io/classnames
   *)
 
 react-is/cjs/react-is.development.js:
