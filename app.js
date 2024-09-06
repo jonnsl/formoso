@@ -36283,6 +36283,9 @@
       ...oldDestPage,
       sections: splice(oldDestPage.sections, sectionDestIdx, 0, pick3)
     };
+    if (newSourcePage.sections.length === 0) {
+      return remove(replaceAt(pages, pageDestIdx, newDestPage), pageSourceIdx);
+    }
     return pages.map(function(page, index3) {
       if (index3 === pageSourceIdx) {
         return newSourcePage;
