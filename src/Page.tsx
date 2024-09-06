@@ -1,8 +1,10 @@
 
-import React, { ReactNode, useRef } from 'react'
+import React, { ReactNode, RefCallback, useRef } from 'react'
+import classnames from 'classnames'
 import FormSection, { Section, emptySection, duplicateSection, mergeSections } from './Section'
 import { remove, replaceAt, splice } from './Immutable'
 import useAutoFocus from './AutoFocusHook'
+import { Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd'
 
 export type Page = {
   key: string
@@ -20,10 +22,10 @@ export default function FormPage(props: FormPageProps): ReactNode {
   const { page, onChange, onSectionFocus, onInputFocus } = props
   const { sections } = page
 
-  const listRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>()
   useAutoFocus(listRef, sections)
 
-  const renderSection = (section: Section, index: number): ReactNode => {
+  const renderSection = (section: Section, index: number) => {
     const onSectionChange = (section: Section): void => {
       const sections = replaceAt(page.sections, index, section)
       onChange({ ...page, sections })
@@ -56,9 +58,13 @@ export default function FormPage(props: FormPageProps): ReactNode {
 
     const length = props.page.sections.length
 
-    return (
+    return (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
       <FormSection
         key={section.key}
+        innerRef={provided.innerRef}
+        draggableProps={provided.draggableProps}
+        dragHandleProps={provided.dragHandleProps}
+        isDragging={snapshot.isDragging}
         title={`Section ${index + 1} of ${length}`}
         section={section}
         onFocus={handleSectionFocus}
@@ -70,11 +76,35 @@ export default function FormPage(props: FormPageProps): ReactNode {
     )
   }
 
-  return (
-    <div ref={listRef}>
-      { page.sections.map(renderSection) }
-    </div>
-  )
+  const renderDraggableSection = (section: Section, index: number) => {
+    return (
+      <Draggable
+        key={section.key}
+        draggableId={section.key}
+        index={index}>{ renderSection(section, index) }</Draggable>
+    )
+  }
+
+  const renderSections = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
+    const className = classnames('inputs', {
+      'dragging-over': snapshot.isDraggingOver,
+    })
+    const legacyRef: RefCallback<HTMLDivElement> = (element: HTMLDivElement | null): void => {
+      if (element) {
+        listRef.current = element
+      }
+      provided.innerRef(element)
+    }
+
+    return (
+      <div className={className} ref={legacyRef} {...provided.droppableProps}>
+        { sections.map(renderDraggableSection) }
+        { provided.placeholder }
+      </div>
+    )
+  }
+
+  return <Droppable droppableId={page.key} type="SECTION">{ renderSections }</Droppable>
 }
 
 let page_key = 0
@@ -83,7 +113,7 @@ let page_key = 0
  */
 export function emptyPage(): Page {
   return {
-    key: `${page_key++}`,
+    key: `PAGE_${page_key++}`,
     sections: [emptySection()],
   }
 }

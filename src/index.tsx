@@ -2,7 +2,7 @@
 import React, { ElementRef, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import FormPage, { emptyPage, Page } from './Page'
 import { remove, replaceAt, splice } from './Immutable'
-import { pickAndPlaceInputByKeys, addNewQuestion, addNewSection } from './ImmutableOperations'
+import { pickAndPlaceSectionByKeys, pickAndPlaceInputByKeys, addNewQuestion, addNewSection } from './ImmutableOperations'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 
 export type FormosoProps = {
@@ -75,6 +75,10 @@ export default function Formoso(props: FormosoProps): ReactNode {
       const inputSourceIdx = source.index
       const inputDestIdx = destination.index
       onChange(pickAndPlaceInputByKeys(pages, source.droppableId, destination.droppableId, inputSourceIdx, inputDestIdx))
+    } else if (result.type === 'SECTION') {
+      const sectionSourceIdx = source.index
+      const sectionDestIdx = destination.index
+      onChange(pickAndPlaceSectionByKeys(pages, source.droppableId, destination.droppableId, sectionSourceIdx, sectionDestIdx))
     }
   }
 

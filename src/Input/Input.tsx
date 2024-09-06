@@ -313,7 +313,7 @@ let input_key = 0
  */
 export function emptyInput(): Input {
   return {
-    key: `${input_key++}`,
+    key: `INPUT_${input_key++}`,
     label: '',
     type: 'text',
     isConditional: false,
@@ -358,6 +358,6 @@ export function emptyInput(): Input {
 export function duplicateInput(input: Input): Input {
   return {
     ...input,
-    key: `${input_key++}`,
+    key: `INPUT_${input_key++}`,
   }
 }

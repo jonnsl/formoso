@@ -1,10 +1,12 @@
 
-import React, { ReactNode, useRef } from 'react'
+import React, { ReactNode, RefCallback, useRef } from 'react'
+import classnames from 'classnames'
 import TextareaAutosize from 'react-textarea-autosize'
 import InputList from './Input/List'
 import { emptyInput, Input } from './Input/Input'
 import OverflowMenu, { MenuItem } from './OverflowMenu'
 import { Grip, Triangle } from './Icons'
+import { DraggableProvided } from 'react-beautiful-dnd'
 
 export interface Section {
   key: string
@@ -13,6 +15,10 @@ export interface Section {
 }
 
 export type SectionProps = {
+  innerRef: DraggableProvided['innerRef']
+  draggableProps: DraggableProvided['draggableProps']
+  dragHandleProps: DraggableProvided['dragHandleProps']
+  isDragging: boolean
   title: string,
   section: Section,
   onFocus: (el: HTMLElement) => void
@@ -24,17 +30,26 @@ export type SectionProps = {
 }
 
 export default function Section(props: SectionProps): ReactNode {
+  const { innerRef, draggableProps, dragHandleProps, isDragging } = props
   const { section, onFocus, onChange, onDuplicate, onRemove, onMerge, onInputFocus } = props
-  const divRef = useRef<HTMLDivElement>(null)
+  const divRef = useRef<HTMLDivElement>()
+
+  const legacyRef: RefCallback<HTMLDivElement> = (element: HTMLDivElement | null): void => {
+    if (element) {
+      divRef.current = element
+    }
+    innerRef(element)
+  }
 
   return (
     <div
-      className="panel panel-default section"
-      ref={divRef}
-      onFocus={() => divRef.current ? onFocus(divRef.current) : null}>
+      className={classnames('panel panel-default section', { dragging: isDragging })}
+      ref={legacyRef}
+      onFocus={() => divRef.current ? onFocus(divRef.current) : null}
+      {...draggableProps}>
       <div className="section-top-bar">
         <div className="section-info">
-          <Grip className="grip" />
+          <Grip className="grip" {...dragHandleProps} />
           <span>{ props.title }</span>
           <Triangle className="top-triangle" />
         </div>
@@ -71,7 +86,7 @@ let section_key = 0
  */
 export function emptySection(): Section {
   return {
-    key: `${section_key++}`,
+    key: `SECTION_${section_key++}`,
     title: '',
     inputs: [emptyInput()],
   }
@@ -83,7 +98,7 @@ export function emptySection(): Section {
 export function duplicateSection(section: Section): Section {
   return {
     ...section,
-    key: `${section_key++}`,
+    key: `SECTION_${section_key++}`,
   }
 }
 
@@ -92,7 +107,7 @@ export function duplicateSection(section: Section): Section {
  */
 export function mergeSections(a: Section, b: Section): Section {
   return {
-    key: `${section_key++}`,
+    key: `SECTION_${section_key++}`,
     title: a.title,
     inputs: a.inputs.concat(b.inputs),
   }

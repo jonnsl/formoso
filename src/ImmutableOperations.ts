@@ -44,6 +44,63 @@ export function addNewQuestion (pages: Page[], pageIndex: number, sectionIndex: 
 }
 
 /**
+ * Removes a section from inside a page and inserts inside another page.
+ */
+export function pickAndPlaceSectionByKeys (pages: Page[], pageSourceKey: string, pageDestKey: string, sectionSourceIdx: number, sectionDestIdx: number): Page[] {
+  const pageSourceIdx = findPage(pages, pageSourceKey)
+  const pageDestIdx = findPage(pages, pageDestKey)
+  return pickAndPlaceSection(pages, pageSourceIdx, pageDestIdx, sectionSourceIdx, sectionDestIdx)
+}
+
+/**
+ * Removes a section from inside a page and inserts inside another page.
+ */
+function pickAndPlaceSection (pages: Page[], pageSourceIdx: number, pageDestIdx: number, sectionSourceIdx: number, sectionDestIdx: number): Page[] {
+  const pick = pages[pageSourceIdx]?.sections[sectionSourceIdx]
+  if (pick === undefined) {
+    throw new Error('Source input not found!')
+  }
+  const oldSourcePage = pages[pageSourceIdx]
+  if (oldSourcePage === undefined) {
+    throw new Error('Source page not found!')
+  }
+
+  if (pageSourceIdx === pageDestIdx) {
+    const sectionsWithoutMovedSection = remove(oldSourcePage.sections, sectionSourceIdx)
+    const newPage: Page = {
+      ...oldSourcePage,
+      sections: splice(sectionsWithoutMovedSection, sectionDestIdx, 0, pick),
+    }
+
+    return replaceAt(pages, pageSourceIdx, newPage)
+  }
+
+  const newSourcePage: Page = {
+    ...oldSourcePage,
+    sections: remove(oldSourcePage.sections, sectionSourceIdx),
+  }
+
+  const oldDestPage = pages[pageDestIdx]
+  if (oldDestPage === undefined) {
+    throw new Error('Dest page not found!')
+  }
+  const newDestPage: Page = {
+    ...oldDestPage,
+    sections: splice(oldDestPage.sections, sectionDestIdx, 0, pick),
+  }
+
+  return pages.map(function (page: Page, index: number): Page {
+    if (index === pageSourceIdx) {
+      return newSourcePage
+    } else if (index === pageDestIdx) {
+      return newDestPage
+    } else {
+      return page
+    }
+  })
+}
+
+/**
  * Removes a input from a section inside a page and inserts inside another section inside another page.
  */
 export function pickAndPlaceInputByKeys (pages: Page[], sectionSourceKey: string, sectionDestKey: string, inputSourceIdx: number, inputDestIdx: number): Page[] {
@@ -55,7 +112,7 @@ export function pickAndPlaceInputByKeys (pages: Page[], sectionSourceKey: string
 /**
  * Removes a input from a section inside a page and inserts inside another section inside another page.
  */
-export function pickAndPlaceInput (pages: Page[], pageSourceIdx: number, pageDestIdx: number, sectionSourceIdx: number, sectionDestIdx: number, inputSourceIdx: number, inputDestIdx: number): Page[] {
+function pickAndPlaceInput (pages: Page[], pageSourceIdx: number, pageDestIdx: number, sectionSourceIdx: number, sectionDestIdx: number, inputSourceIdx: number, inputDestIdx: number): Page[] {
   const pick = pages[pageSourceIdx]?.sections[sectionSourceIdx]?.inputs[inputSourceIdx]
   if (pick === undefined) {
     throw new Error('Source input not found!')
@@ -177,4 +234,21 @@ function findPageAndSection (pages: Page[], sectionKey: string): [number, number
   }
 
   throw new Error('Section not found!')
+}
+
+/**
+ * Finds the index of the page given a page key.
+ */
+function findPage (pages: Page[], pageKey: string): number {
+  for (let i = 0, l = pages.length; i < l; i++) {
+    const page = pages[i]
+    if (page === undefined) {
+      throw new Error('')
+    }
+    if (page.key === pageKey) {
+      return i
+    }
+  }
+
+  throw new Error('Page not found!')
 }
