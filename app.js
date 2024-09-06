@@ -35739,12 +35739,13 @@
   function Input(props) {
     const [validationOptionsModalOpen, setValidationOptionsModalOpen] = (0, import_react22.useState)(false);
     const [advancedOptionsModalOpen, setAdvancedOptionsModalOpen] = (0, import_react22.useState)(false);
+    const { innerRef, draggableProps, dragHandleProps, isDragging } = props;
     const { onChange, onDuplicate, onRemove, onFocus } = props;
     const { label, type, condition, isConditional, required: required2 } = props.input;
     const { showPre, showDescription, showPos, shuffle, pre, pos, help } = props.input;
     const closeValidationOptionsModal = () => setValidationOptionsModalOpen(false);
     const closeAdvancedOptionsModal = () => setAdvancedOptionsModalOpen(false);
-    return /* @__PURE__ */ import_react22.default.createElement("div", { tabIndex: 0, className: "input", onFocus }, /* @__PURE__ */ import_react22.default.createElement("div", { className: "grip-row" }, /* @__PURE__ */ import_react22.default.createElement(Grip, { className: "grip" })), showPre ? /* @__PURE__ */ import_react22.default.createElement(
+    return /* @__PURE__ */ import_react22.default.createElement("div", { tabIndex: 0, className: (0, import_classnames4.default)("input", `input_${type}`, { dragging: isDragging }), onFocus, ref: innerRef, ...draggableProps }, /* @__PURE__ */ import_react22.default.createElement("div", { className: "grip-row" }, /* @__PURE__ */ import_react22.default.createElement(Grip, { className: "grip", ...dragHandleProps })), showPre ? /* @__PURE__ */ import_react22.default.createElement(
       index2,
       {
         className: "seamless",
@@ -36010,9 +36011,10 @@
   }
 
   // src/Input/List.tsx
+  var import_classnames5 = __toESM(require_classnames());
   function InputList(props) {
-    const { inputs, onInputFocus, onChange } = props;
-    const listRef = (0, import_react24.useRef)(null);
+    const { listId, inputs, onInputFocus, onChange } = props;
+    const listRef = (0, import_react24.useRef)();
     useAutoFocus(listRef, inputs);
     const renderInput = (input, index3) => {
       const onInputChange = (value) => {
@@ -36024,10 +36026,14 @@
       const onRemove = () => {
         onChange(remove(props.inputs, index3));
       };
-      return /* @__PURE__ */ import_react24.default.createElement(
+      return (provided, snapshot) => /* @__PURE__ */ import_react24.default.createElement(
         Input,
         {
           key: input.key,
+          innerRef: provided.innerRef,
+          draggableProps: provided.draggableProps,
+          dragHandleProps: provided.dragHandleProps,
+          isDragging: snapshot.isDragging,
           input,
           onFocus: () => onInputFocus(index3),
           onChange: onInputChange,
@@ -36036,7 +36042,30 @@
         }
       );
     };
-    return /* @__PURE__ */ import_react24.default.createElement("div", { ref: listRef }, props.inputs.map(renderInput));
+    const renderDraggableInput = (input, index3) => {
+      return /* @__PURE__ */ import_react24.default.createElement(
+        PublicDraggable,
+        {
+          key: input.key,
+          draggableId: input.key,
+          index: index3
+        },
+        renderInput(input, index3)
+      );
+    };
+    const renderInputs = (provided, snapshot) => {
+      const className = (0, import_classnames5.default)("inputs", {
+        "dragging-over": snapshot.isDraggingOver
+      });
+      const legacyRef = (element) => {
+        if (element) {
+          listRef.current = element;
+        }
+        provided.innerRef(element);
+      };
+      return /* @__PURE__ */ import_react24.default.createElement("div", { className, ref: legacyRef, ...provided.droppableProps }, inputs.map(renderDraggableInput), provided.placeholder);
+    };
+    return /* @__PURE__ */ import_react24.default.createElement(ConnectedDroppable, { droppableId: listId, type: "INPUT" }, renderInputs);
   }
 
   // src/Section.tsx
@@ -36065,6 +36094,7 @@
         InputList,
         {
           inputs: section.inputs,
+          listId: section.key,
           onInputFocus,
           onChange: (inputs) => onChange({ ...section, inputs })
         }
@@ -36150,6 +36180,150 @@
     };
   }
 
+  // src/ImmutableOperations.ts
+  function addNewSection(pages, pageIndex, sectionIndex) {
+    const oldPage = pages[pageIndex];
+    if (oldPage === void 0) {
+      return pages;
+    }
+    const newPage = {
+      ...oldPage,
+      sections: splice(oldPage.sections, sectionIndex + 1, 0, emptySection())
+    };
+    return replaceAt(pages, pageIndex, newPage);
+  }
+  function addNewQuestion(pages, pageIndex, sectionIndex, inputIndex) {
+    const oldPage = pages[pageIndex];
+    if (oldPage === void 0) {
+      return pages;
+    }
+    const oldSection = oldPage.sections[sectionIndex];
+    if (oldSection === void 0) {
+      return pages;
+    }
+    const newSection = {
+      ...oldSection,
+      inputs: splice(oldSection.inputs, inputIndex + 1, 0, emptyInput())
+    };
+    const newPage = {
+      ...oldPage,
+      sections: replaceAt(oldPage.sections, sectionIndex, newSection)
+    };
+    return replaceAt(pages, pageIndex, newPage);
+  }
+  function pickAndPlaceInputByKeys(pages, sectionSourceKey, sectionDestKey, inputSourceIdx, inputDestIdx) {
+    const [pageSourceIdx, sectionSourceIdx] = findPageAndSection(pages, sectionSourceKey);
+    const [pageDestIdx, sectionDestIdx] = findPageAndSection(pages, sectionDestKey);
+    return pickAndPlaceInput(pages, pageSourceIdx, pageDestIdx, sectionSourceIdx, sectionDestIdx, inputSourceIdx, inputDestIdx);
+  }
+  function pickAndPlaceInput(pages, pageSourceIdx, pageDestIdx, sectionSourceIdx, sectionDestIdx, inputSourceIdx, inputDestIdx) {
+    var _a, _b, _c, _d;
+    const pick3 = (_b = (_a = pages[pageSourceIdx]) == null ? void 0 : _a.sections[sectionSourceIdx]) == null ? void 0 : _b.inputs[inputSourceIdx];
+    if (pick3 === void 0) {
+      throw new Error("Source input not found!");
+    }
+    const oldSourcePage = pages[pageSourceIdx];
+    if (oldSourcePage === void 0) {
+      throw new Error("Source page not found!");
+    }
+    const oldSourceSection = oldSourcePage.sections[sectionSourceIdx];
+    if (oldSourceSection === void 0) {
+      throw new Error("Source section not found!");
+    }
+    if (pageSourceIdx === pageDestIdx) {
+      if (sectionSourceIdx === sectionDestIdx) {
+        const inputsWithoutMovedInput = remove(oldSourceSection.inputs, inputSourceIdx);
+        const newSection = {
+          ...oldSourceSection,
+          inputs: splice(inputsWithoutMovedInput, inputDestIdx, 0, pick3)
+        };
+        const newPage2 = {
+          ...oldSourcePage,
+          sections: replaceAt(oldSourcePage.sections, sectionDestIdx, newSection)
+        };
+        return replaceAt(pages, pageSourceIdx, newPage2);
+      }
+      const newSourceSection2 = {
+        ...oldSourceSection,
+        inputs: remove(oldSourceSection.inputs, inputSourceIdx)
+      };
+      const oldDestSection2 = (_c = pages[pageDestIdx]) == null ? void 0 : _c.sections[sectionDestIdx];
+      if (oldDestSection2 === void 0) {
+        throw new Error("Destination section not found!");
+      }
+      const newDestSection2 = {
+        ...oldDestSection2,
+        inputs: splice(oldDestSection2.inputs, inputDestIdx, 0, pick3)
+      };
+      const sections = oldSourcePage.sections.map(function(section, index3) {
+        if (index3 === sectionSourceIdx) {
+          return newSourceSection2;
+        } else if (index3 === sectionDestIdx) {
+          return newDestSection2;
+        } else {
+          return section;
+        }
+      });
+      const newPage = {
+        ...oldSourcePage,
+        sections
+      };
+      return replaceAt(pages, pageSourceIdx, newPage);
+    }
+    const newSourceSection = {
+      ...oldSourceSection,
+      inputs: remove(oldSourceSection.inputs, inputSourceIdx)
+    };
+    const oldDestSection = (_d = pages[pageDestIdx]) == null ? void 0 : _d.sections[sectionDestIdx];
+    if (oldDestSection === void 0) {
+      throw new Error("Destination section not found!");
+    }
+    const newDestSection = {
+      ...oldDestSection,
+      inputs: splice(oldDestSection.inputs, inputDestIdx, 0, pick3)
+    };
+    const newSourcePage = {
+      ...oldSourcePage,
+      sections: replaceAt(oldSourcePage.sections, sectionSourceIdx, newSourceSection)
+    };
+    const oldDestPage = pages[pageDestIdx];
+    if (oldDestPage === void 0) {
+      throw new Error("Destination page not found!");
+    }
+    const newDestPage = {
+      ...oldDestPage,
+      sections: replaceAt(oldDestPage.sections, sectionDestIdx, newDestSection)
+    };
+    return pages.map(function(page, index3) {
+      if (index3 === pageSourceIdx) {
+        return newSourcePage;
+      } else if (index3 === pageDestIdx) {
+        return newDestPage;
+      } else {
+        return page;
+      }
+    });
+  }
+  function findPageAndSection(pages, sectionKey) {
+    for (let i = 0, l = pages.length; i < l; i++) {
+      const page = pages[i];
+      if (page === void 0) {
+        throw new Error("");
+      }
+      const sections = page.sections;
+      for (let j = 0, n = sections.length; j < n; j++) {
+        const section = sections[j];
+        if (section === void 0) {
+          throw new Error("");
+        }
+        if (section.key === sectionKey) {
+          return [i, j];
+        }
+      }
+    }
+    throw new Error("Section not found!");
+  }
+
   // src/index.tsx
   function Formoso(props) {
     const { pages, onChange } = props;
@@ -36182,6 +36356,23 @@
         window.removeEventListener("scroll", handleScroll);
       };
     }, [handleScroll]);
+    const onDragEnd3 = (result) => {
+      if (result.combine) {
+        return;
+      }
+      if (!result.destination) {
+        return;
+      }
+      const { source, destination } = result;
+      if (source.droppableId === destination.droppableId && source.index === destination.index) {
+        return;
+      }
+      if (result.type === "INPUT") {
+        const inputSourceIdx = source.index;
+        const inputDestIdx = destination.index;
+        onChange(pickAndPlaceInputByKeys(pages, source.droppableId, destination.droppableId, inputSourceIdx, inputDestIdx));
+      }
+    };
     const renderPage = (page, index3) => {
       const onPageChange = (page2) => {
         onChange(replaceAt(pages, index3, page2));
@@ -36231,7 +36422,7 @@
       e.preventDefault();
       onChange(addNewQuestion(pages, activePage.current, activeSection.current, activeInput.current));
     };
-    return /* @__PURE__ */ import_react27.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react27.default.createElement("div", { className: "col-md-11" }, pages.map(renderPage)), /* @__PURE__ */ import_react27.default.createElement("div", { className: "col-md-1 side_panel_container", ref: sideBarContainerRef }, /* @__PURE__ */ import_react27.default.createElement(
+    return /* @__PURE__ */ import_react27.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react27.default.createElement("div", { className: "col-md-11" }, /* @__PURE__ */ import_react27.default.createElement(DragDropContext, { onDragEnd: onDragEnd3 }, pages.map(renderPage))), /* @__PURE__ */ import_react27.default.createElement("div", { className: "col-md-1 side_panel_container", ref: sideBarContainerRef }, /* @__PURE__ */ import_react27.default.createElement(
       "div",
       {
         className: "panel panel-default side-panel",
@@ -36255,36 +36446,6 @@
       return window.innerHeight + window.scrollY - sidebarContainer.offsetTop - sidebar.offsetHeight;
     }
     return section.offsetTop;
-  }
-  function addNewSection(pages, pageIndex, sectionIndex) {
-    const oldPage = pages[pageIndex];
-    if (oldPage === void 0) {
-      return pages;
-    }
-    const newPage = {
-      ...oldPage,
-      sections: splice(oldPage.sections, sectionIndex + 1, 0, emptySection())
-    };
-    return replaceAt(pages, pageIndex, newPage);
-  }
-  function addNewQuestion(pages, pageIndex, sectionIndex, inputIndex) {
-    const oldPage = pages[pageIndex];
-    if (oldPage === void 0) {
-      return pages;
-    }
-    const oldSection = oldPage.sections[sectionIndex];
-    if (oldSection === void 0) {
-      return pages;
-    }
-    const newSection = {
-      ...oldSection,
-      inputs: splice(oldSection.inputs, inputIndex + 1, 0, emptyInput())
-    };
-    const newPage = {
-      ...oldPage,
-      sections: replaceAt(oldPage.sections, sectionIndex, newSection)
-    };
-    return replaceAt(pages, pageIndex, newPage);
   }
 
   // gh-pages/App.tsx

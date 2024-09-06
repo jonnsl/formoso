@@ -6336,6 +6336,9 @@ body {
   padding: 0 15px 15px 15px;
   background-color: #fff;
 }
+.input.dragging {
+  outline: 1px solid #d3e0e9;
+}
 .grip-row {
   text-align: center;
 }
