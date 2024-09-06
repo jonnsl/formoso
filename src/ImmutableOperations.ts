@@ -89,6 +89,11 @@ function pickAndPlaceSection (pages: Page[], pageSourceIdx: number, pageDestIdx:
     sections: splice(oldDestPage.sections, sectionDestIdx, 0, pick),
   }
 
+  // If the source page ends up with 0 sections, remove it altogether.
+  if (newSourcePage.sections.length === 0) {
+    return remove(replaceAt(pages, pageDestIdx, newDestPage), pageSourceIdx)
+  }
+
   return pages.map(function (page: Page, index: number): Page {
     if (index === pageSourceIdx) {
       return newSourcePage
