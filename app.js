@@ -1093,11 +1093,11 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useReducer(reducer2, initialArg, init);
           }
-          function useRef15(initialValue) {
+          function useRef16(initialValue) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect8(create2, deps) {
+          function useEffect9(create2, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create2, deps);
           }
@@ -1109,7 +1109,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useLayoutEffect(create2, deps);
           }
-          function useCallback3(callback, deps) {
+          function useCallback4(callback, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
@@ -1876,18 +1876,18 @@
           exports.memo = memo;
           exports.startTransition = startTransition;
           exports.unstable_act = act;
-          exports.useCallback = useCallback3;
+          exports.useCallback = useCallback4;
           exports.useContext = useContext6;
           exports.useDebugValue = useDebugValue2;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect8;
+          exports.useEffect = useEffect9;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect5;
           exports.useMemo = useMemo5;
           exports.useReducer = useReducer3;
-          exports.useRef = useRef15;
+          exports.useRef = useRef16;
           exports.useState = useState7;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
@@ -26351,7 +26351,7 @@
   });
 
   // gh-pages/App.tsx
-  var import_react28 = __toESM(require_react());
+  var import_react29 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
   // src/index.tsx
@@ -35144,6 +35144,41 @@
     return `translate(0, ${yAxis}px)`;
   }
 
+  // src/Input/utils.ts
+  function normalizeInputName(value) {
+    return value.replace(/\s+/g, "_").toLowerCase().normalize("NFD").replace(/[^a-z0-9_]/g, "").trim();
+  }
+  function inputNameConstraints(e) {
+    const selectionStart = e.currentTarget.selectionStart || 0;
+    const key = e.key.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (key === "_" || key >= "a" && key <= "z" || key >= "A" && key <= "Z" || key === " " && selectionStart > 0 || key >= "0" && key <= "9" && selectionStart > 0) {
+      return;
+    }
+    e.preventDefault();
+  }
+  function pasteToList(e) {
+    e.preventDefault();
+    const html = e.clipboardData.getData("text/html");
+    const plainText = e.clipboardData.getData("text/plain");
+    if (html) {
+      const domparser = new DOMParser();
+      const doc = domparser.parseFromString(html, "text/html");
+      const table = doc.body.firstElementChild;
+      if (!(table instanceof HTMLTableElement)) {
+        const text = doc.body.innerText;
+        return text.split("\n").map((s) => s.trim()).filter((s) => s !== "");
+      }
+      const firstTBody = table.tBodies[0];
+      if (firstTBody === void 0) {
+        return null;
+      }
+      return Array.from(firstTBody.children).map((tr) => tr.firstElementChild instanceof HTMLElement ? tr.firstElementChild.innerText.trim() : "").filter((s) => s !== "");
+    } else if (plainText) {
+      return plainText.split("\n").map((s) => s.trim()).filter((s) => s !== "");
+    }
+    return null;
+  }
+
   // src/Input/Options.tsx
   function Options(props) {
     const { value: options, type, onChange } = props;
@@ -35213,6 +35248,23 @@
       const newOption = emptyOption(label);
       onChange(options.concat(newOption));
     };
+    const handleLinePaste = (i) => (e) => {
+      if (e.currentTarget.selectionStart !== 0 || e.currentTarget.selectionEnd !== e.currentTarget.value.length) {
+        return;
+      }
+      e.preventDefault();
+      const lines = pasteToList(e);
+      if (lines === null) {
+        return;
+      }
+      const firstLine = lines.shift();
+      const activeOption = options[i];
+      if (firstLine === void 0 || activeOption === void 0) {
+        return;
+      }
+      const newOptions = splice(options, i, 1, { ...activeOption, label: firstLine });
+      onChange(newOptions.concat(lines.map((line) => emptyOption(line))));
+    };
     const handleOptionChange = (i) => (option) => {
       onChange(replaceAt(options, i, option));
     };
@@ -35258,6 +35310,7 @@
           undeletable,
           value: option,
           isDragging: snapshot.isDragging,
+          onPaste: handleLinePaste(index3),
           onChange: handleOptionChange(index3),
           onRemove: removeOption(index3)
         }
@@ -35280,7 +35333,7 @@
       draggable: draggable2 = true
     } = props;
     const { innerRef, draggableProps, dragHandleProps, isDragging } = props;
-    const { onRemove, onChange, undeletable, type, i } = props;
+    const { onRemove, onChange, onPaste, undeletable, type, i } = props;
     const { label } = value;
     return /* @__PURE__ */ import_react15.default.createElement("div", { className: (0, import_classnames2.default)("option", { draggable: draggable2, dragging: isDragging }), ref: innerRef, ...limitMovementToYAxis(draggableProps) }, /* @__PURE__ */ import_react15.default.createElement(Grip, { className: "grip", ...dragHandleProps }), type === "radio" || type === "checkbox" ? /* @__PURE__ */ import_react15.default.createElement("input", { type, className: "custom-control-input", checked: false, readOnly: true, tabIndex: -1 }) : /* @__PURE__ */ import_react15.default.createElement("span", null, `${i}. `), /* @__PURE__ */ import_react15.default.createElement(
       "input",
@@ -35289,6 +35342,7 @@
         className: "seamless",
         value: label,
         placeholder: placeholder2,
+        onPaste,
         onFocus: (e) => selectAll(e.target),
         onChange: (e) => onChange({ ...value, label: e.target.value })
       }
@@ -35662,19 +35716,6 @@
   var import_react20 = __toESM(require_react());
   function AutoCompleteOptions(props) {
     return /* @__PURE__ */ import_react20.default.createElement("select", { ...props }, /* @__PURE__ */ import_react20.default.createElement("option", { value: "" }, "(Default)"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "off" }, "off"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "on" }, "on"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "name" }, "name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "honorific-prefix" }, "honorific-prefix"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "given-name" }, "given-name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "additional-name" }, "additional-name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "family-name" }, "family-name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "honorific-suffix" }, "honorific-suffix"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "nickname" }, "nickname"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "email" }, "email"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "username" }, "username"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "new-password" }, "new-password"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "current-password" }, "current-password"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "one-time-code" }, "one-time-code"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "organization-title" }, "organization-title"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "organization" }, "organization"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "street-address" }, "street-address"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "address-line1" }, "address-line1"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "address-level4" }, "address-level4"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "address-level3" }, "address-level3"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "address-level2" }, "address-level2"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "address-level1" }, "address-level1"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "country" }, "country"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "country-name" }, "country-name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "postal-code" }, "postal-code"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-name" }, "cc-name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-given-name" }, "cc-given-name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-additional-name" }, "cc-additional-name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-family-name" }, "cc-family-name"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-number" }, "cc-number"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-exp" }, "cc-exp"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-exp-month" }, "cc-exp-month"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-exp-year" }, "cc-exp-year"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-csc" }, "cc-csc"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "cc-type" }, "cc-type"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "transaction-currency" }, "transaction-currency"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "transaction-amount" }, "transaction-amount"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "language" }, "language"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "bday" }, "bday"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "bday-day" }, "bday-day"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "bday-month" }, "bday-month"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "bday-year" }, "bday-year"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "sex" }, "sex"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "tel" }, "tel"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "tel-country-code" }, "tel-country-code"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "tel-national" }, "tel-national"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "tel-area-code" }, "tel-area-code"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "tel-local" }, "tel-local"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "tel-extension" }, "tel-extension"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "impp" }, "impp"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "url" }, "url"), /* @__PURE__ */ import_react20.default.createElement("option", { value: "photo" }, "photo"));
-  }
-
-  // src/Input/utils.ts
-  function normalizeInputName(value) {
-    return value.replace(/\s+/g, "_").toLowerCase().normalize("NFD").replace(/[^a-z0-9_]/g, "").trim();
-  }
-  function inputNameConstraints(e) {
-    const selectionStart = e.currentTarget.selectionStart || 0;
-    const key = e.key.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    if (key === "_" || key >= "a" && key <= "z" || key >= "A" && key <= "Z" || key === " " && selectionStart > 0 || key >= "0" && key <= "9" && selectionStart > 0) {
-      return;
-    }
-    e.preventDefault();
   }
 
   // src/Input/AdvancedOptions.tsx
@@ -36549,14 +36590,95 @@
     return section.offsetTop;
   }
 
+  // src/UndoRedo.ts
+  var import_react28 = __toESM(require_react());
+  function useUndoRedo(initialData, TIME_TO_COMMIT = 500) {
+    const [data, setData] = (0, import_react28.useState)(initialData);
+    const lastUpdatedAt = (0, import_react28.useRef)(Date.now());
+    const history = (0, import_react28.useRef)([]);
+    const historyPosition = (0, import_react28.useRef)(0);
+    const setDataAndUpdatedAt = (0, import_react28.useCallback)(function update2(newData) {
+      lastUpdatedAt.current = Date.now();
+      setData(newData);
+    }, []);
+    const commitToHistory = (0, import_react28.useCallback)(function commitToHistory2() {
+      if (revIndex(history.current, historyPosition.current) === data) {
+        return;
+      }
+      history.current = insertAt(history.current, history.current.length - historyPosition.current, data);
+      historyPosition.current = 0;
+    }, [data]);
+    const debouncedCommitToHistory = (0, import_react28.useCallback)(function debouncedCommitToHistory2() {
+      const now = Date.now();
+      if (lastUpdatedAt.current + TIME_TO_COMMIT > now) {
+        return;
+      }
+      return commitToHistory();
+    }, [commitToHistory]);
+    const saveData = (0, import_react28.useCallback)(function(newData) {
+      debouncedCommitToHistory();
+      setDataAndUpdatedAt(newData);
+    }, [debouncedCommitToHistory]);
+    const saveDataNow = (0, import_react28.useCallback)(function(newData) {
+      setDataAndUpdatedAt(newData);
+      commitToHistory();
+    }, [commitToHistory]);
+    const undo = (0, import_react28.useCallback)(function undo2() {
+      commitToHistory();
+      const canUndo = historyPosition.current + 1 >= history.current.length;
+      if (canUndo) {
+        return;
+      }
+      historyPosition.current = historyPosition.current + 1;
+      setData(revIndex(history.current, historyPosition.current));
+    }, [commitToHistory]);
+    const redo = (0, import_react28.useCallback)(function redo2() {
+      const canRedo = historyPosition.current <= 0;
+      if (canRedo) {
+        return;
+      }
+      historyPosition.current = historyPosition.current - 1;
+      setData(revIndex(history.current, historyPosition.current));
+    }, []);
+    return [
+      data,
+      saveData,
+      undo,
+      redo,
+      saveDataNow
+    ];
+  }
+  function revIndex(arr, index3) {
+    return arr[arr.length - 1 - index3];
+  }
+  function insertAt(arr, index3, item) {
+    return splice(arr, index3, arr.length - index3, item);
+  }
+
   // gh-pages/App.tsx
+  var emptyForm = [emptyPage()];
   function App2() {
-    const [pages, setPages] = (0, import_react28.useState)([emptyPage()]);
-    return /* @__PURE__ */ import_react28.default.createElement(Formoso, { pages, onChange: setPages });
+    const [pages, setPages, undo, redo] = useUndoRedo(emptyForm);
+    (0, import_react29.useEffect)(function() {
+      const handleKeyDown = (e) => {
+        if (e.ctrlKey === true && e.key === "z") {
+          e.preventDefault();
+          undo();
+        } else if (e.ctrlKey === true && e.key === "y") {
+          e.preventDefault();
+          redo();
+        }
+      };
+      document.body.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [undo, redo]);
+    return /* @__PURE__ */ import_react29.default.createElement(Formoso, { pages, onChange: setPages });
   }
   var container = document.getElementById("app");
   var root = (0, import_client.createRoot)(container);
-  root.render(/* @__PURE__ */ import_react28.default.createElement(App2, null));
+  root.render(/* @__PURE__ */ import_react29.default.createElement(App2, null));
 })();
 /*! Bundled license information:
 
