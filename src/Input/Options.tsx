@@ -1,10 +1,11 @@
 
-import React, { KeyboardEvent, MouseEvent, RefCallback, useEffect, useRef } from 'react'
+import React, { KeyboardEvent, MouseEvent, ClipboardEvent, RefCallback, useEffect, useRef } from 'react'
 import classnames from 'classnames'
-import { reorder, replaceAt, remove } from '../Immutable'
+import { reorder, replaceAt, remove, splice } from '../Immutable'
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableStateSnapshot, DroppableProvided, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd'
 import { Grip } from '../Icons'
 import { limitMovementToYAxis } from '../DragAndDropUtils'
+import { pasteToList } from './utils'
 
 export type OptionItem = {
   key: string
@@ -101,6 +102,29 @@ export default function Options (props: OptionsProps) {
     onChange(options.concat(newOption))
   }
 
+  const handleLinePaste = (i: number) => (e: ClipboardEvent<HTMLInputElement>): void => {
+    // Only alter the default behaviour if the input has everything selected.
+    if (e.currentTarget.selectionStart !== 0 || e.currentTarget.selectionEnd !== e.currentTarget.value.length) {
+      return
+    }
+
+    e.preventDefault()
+
+    const lines = pasteToList(e)
+    if (lines === null) {
+      return
+    }
+
+    const firstLine = lines.shift()
+    const activeOption = options[i]
+    if (firstLine === undefined || activeOption === undefined) {
+      return
+    }
+
+    const newOptions = splice(options, i, 1, { ...activeOption, label: firstLine })
+    onChange(newOptions.concat(lines.map((line: string) => emptyOption(line))))
+  }
+
   const handleOptionChange = (i: number) => (option: OptionItem) => {
     onChange(replaceAt(options, i, option))
   }
@@ -156,6 +180,7 @@ export default function Options (props: OptionsProps) {
         undeletable={undeletable}
         value={option}
         isDragging={snapshot.isDragging}
+        onPaste={handleLinePaste(index)}
         onChange={handleOptionChange(index)}
         onRemove={removeOption(index)} />
     )
@@ -186,6 +211,7 @@ type OptionProps = {
   i: number
   onChange: (value: OptionItem) => void
   onRemove?: ((e: MouseEvent<HTMLButtonElement>) => void) | undefined
+  onPaste?: ((e: ClipboardEvent<HTMLInputElement>) => void) | undefined
   placeholder?: string
   type: string
   undeletable: boolean
@@ -200,7 +226,7 @@ function Option (props: OptionProps) {
   } = props
 
   const { innerRef, draggableProps, dragHandleProps, isDragging } = props
-  const { onRemove, onChange, undeletable, type, i } = props
+  const { onRemove, onChange, onPaste, undeletable, type, i } = props
   const { label } = value
 
   return (
@@ -212,6 +238,7 @@ function Option (props: OptionProps) {
         className="seamless"
         value={label}
         placeholder={placeholder}
+        onPaste={onPaste}
         onFocus={(e) => selectAll(e.target)}
         onChange={(e) => onChange({ ...value, label: e.target.value })} />
       <button type="button" className="btn btn-link" onClick={onRemove} title="Remove" disabled={undeletable}>
