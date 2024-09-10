@@ -6,6 +6,7 @@ import { DragDropContext, Droppable, Draggable, DropResult, DroppableStateSnapsh
 import { Grip } from '../Icons'
 import { limitMovementToYAxis } from '../DragAndDropUtils'
 import { pasteToList } from './utils'
+import { v4 as uuidv4 } from 'uuid'
 
 export type OptionItem = {
   key: string
@@ -295,13 +296,12 @@ function selectAll (el: HTMLInputElement) {
 
 function noop () {}
 
-let option_key = 0
 /**
  * Creates a new empty option
  */
 export function emptyOption (option: string = ''): OptionItem {
   return {
-    key: `OPTION_${++option_key}`,
+    key: uuidv4(),
     label: option,
   }
 }

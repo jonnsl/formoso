@@ -13,6 +13,7 @@ import RatingInput, { Rating, defaultRating } from './Rating'
 import ValidationRulesForm, { ValidationRules } from './ValidationRules'
 import AdvancedOptionsForm, { AdvancedOptions } from './AdvancedOptions'
 import { DraggableProvided } from 'react-beautiful-dnd'
+import { v4 as uuidv4 } from 'uuid'
 
 export type Column = OptionItem
 export type Row = OptionItem
@@ -307,13 +308,12 @@ function DummyInput (props: dummyInputProps): React.ReactNode {
   return null
 }
 
-let input_key = 0
 /**
  * Creates a new empty input
  */
 export function emptyInput(): Input {
   return {
-    key: `INPUT_${input_key++}`,
+    key: uuidv4(),
     label: '',
     type: 'text',
     isConditional: false,
@@ -358,6 +358,6 @@ export function emptyInput(): Input {
 export function duplicateInput(input: Input): Input {
   return {
     ...input,
-    key: `INPUT_${input_key++}`,
+    key: uuidv4(),
   }
 }

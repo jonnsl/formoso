@@ -5,6 +5,7 @@ import FormSection, { Section, emptySection, duplicateSection, mergeSections } f
 import { remove, replaceAt, splice } from './Immutable'
 import useAutoFocus from './AutoFocusHook'
 import { Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd'
+import { v4 as uuidv4 } from 'uuid'
 
 export type Page = {
   key: string
@@ -107,13 +108,12 @@ export default function FormPage(props: FormPageProps): ReactNode {
   return <Droppable droppableId={page.key} type="SECTION">{ renderSections }</Droppable>
 }
 
-let page_key = 0
 /**
  * Creates a new empty page
  */
 export function emptyPage(): Page {
   return {
-    key: `PAGE_${page_key++}`,
+    key: uuidv4(),
     sections: [emptySection()],
   }
 }

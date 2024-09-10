@@ -7,6 +7,7 @@ import { emptyInput, Input } from './Input/Input'
 import OverflowMenu, { MenuItem } from './OverflowMenu'
 import { Grip, Triangle } from './Icons'
 import { DraggableProvided } from 'react-beautiful-dnd'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface Section {
   key: string
@@ -80,13 +81,12 @@ export default function Section(props: SectionProps): ReactNode {
   )
 }
 
-let section_key = 0
 /**
  * Creates a new empty section
  */
 export function emptySection(): Section {
   return {
-    key: `SECTION_${section_key++}`,
+    key: uuidv4(),
     title: '',
     inputs: [emptyInput()],
   }
@@ -98,7 +98,7 @@ export function emptySection(): Section {
 export function duplicateSection(section: Section): Section {
   return {
     ...section,
-    key: `SECTION_${section_key++}`,
+    key: uuidv4(),
   }
 }
 
@@ -107,7 +107,7 @@ export function duplicateSection(section: Section): Section {
  */
 export function mergeSections(a: Section, b: Section): Section {
   return {
-    key: `SECTION_${section_key++}`,
+    key: uuidv4(),
     title: a.title,
     inputs: a.inputs.concat(b.inputs),
   }
