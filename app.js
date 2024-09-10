@@ -35179,6 +35179,55 @@
     return null;
   }
 
+  // node_modules/uuid/dist/esm-browser/stringify.js
+  var byteToHex = [];
+  for (i = 0; i < 256; ++i) {
+    byteToHex.push((i + 256).toString(16).slice(1));
+  }
+  var i;
+  function unsafeStringify(arr, offset3 = 0) {
+    return (byteToHex[arr[offset3 + 0]] + byteToHex[arr[offset3 + 1]] + byteToHex[arr[offset3 + 2]] + byteToHex[arr[offset3 + 3]] + "-" + byteToHex[arr[offset3 + 4]] + byteToHex[arr[offset3 + 5]] + "-" + byteToHex[arr[offset3 + 6]] + byteToHex[arr[offset3 + 7]] + "-" + byteToHex[arr[offset3 + 8]] + byteToHex[arr[offset3 + 9]] + "-" + byteToHex[arr[offset3 + 10]] + byteToHex[arr[offset3 + 11]] + byteToHex[arr[offset3 + 12]] + byteToHex[arr[offset3 + 13]] + byteToHex[arr[offset3 + 14]] + byteToHex[arr[offset3 + 15]]).toLowerCase();
+  }
+
+  // node_modules/uuid/dist/esm-browser/rng.js
+  var getRandomValues;
+  var rnds8 = new Uint8Array(16);
+  function rng() {
+    if (!getRandomValues) {
+      getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+      if (!getRandomValues) {
+        throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+      }
+    }
+    return getRandomValues(rnds8);
+  }
+
+  // node_modules/uuid/dist/esm-browser/native.js
+  var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+  var native_default = {
+    randomUUID
+  };
+
+  // node_modules/uuid/dist/esm-browser/v4.js
+  function v4(options, buf, offset3) {
+    if (native_default.randomUUID && !buf && !options) {
+      return native_default.randomUUID();
+    }
+    options = options || {};
+    var rnds = options.random || (options.rng || rng)();
+    rnds[6] = rnds[6] & 15 | 64;
+    rnds[8] = rnds[8] & 63 | 128;
+    if (buf) {
+      offset3 = offset3 || 0;
+      for (var i = 0; i < 16; ++i) {
+        buf[offset3 + i] = rnds[i];
+      }
+      return buf;
+    }
+    return unsafeStringify(rnds);
+  }
+  var v4_default = v4;
+
   // src/Input/Options.tsx
   function Options(props) {
     const { value: options, type, onChange } = props;
@@ -35399,10 +35448,9 @@
   }
   function noop5() {
   }
-  var option_key = 0;
   function emptyOption(option = "") {
     return {
-      key: `OPTION_${++option_key}`,
+      key: v4_default(),
       label: option
     };
   }
@@ -35553,8 +35601,8 @@
   }
   function MultiPreview(props) {
     const { rows, columns } = props;
-    const radioColumns = columns.map(() => /* @__PURE__ */ import_react17.default.createElement("td", null, /* @__PURE__ */ import_react17.default.createElement("input", { type: "radio", className: "custom-control-input", readOnly: true, tabIndex: -1 })));
-    return /* @__PURE__ */ import_react17.default.createElement("table", { className: "multiple-choice-preview" }, /* @__PURE__ */ import_react17.default.createElement("thead", null, /* @__PURE__ */ import_react17.default.createElement("tr", null, /* @__PURE__ */ import_react17.default.createElement("th", null), columns.map((c) => /* @__PURE__ */ import_react17.default.createElement("th", null, c.label)))), /* @__PURE__ */ import_react17.default.createElement("tbody", null, rows.map((c) => /* @__PURE__ */ import_react17.default.createElement("tr", null, /* @__PURE__ */ import_react17.default.createElement("td", null, c.label), radioColumns))));
+    const radioColumns = columns.map((c) => /* @__PURE__ */ import_react17.default.createElement("td", { key: c.key }, /* @__PURE__ */ import_react17.default.createElement("input", { type: "radio", className: "custom-control-input", readOnly: true, tabIndex: -1 })));
+    return /* @__PURE__ */ import_react17.default.createElement("table", { className: "multiple-choice-preview" }, /* @__PURE__ */ import_react17.default.createElement("thead", null, /* @__PURE__ */ import_react17.default.createElement("tr", null, /* @__PURE__ */ import_react17.default.createElement("th", null), columns.map((c) => /* @__PURE__ */ import_react17.default.createElement("th", { key: c.key }, c.label)))), /* @__PURE__ */ import_react17.default.createElement("tbody", null, rows.map((c) => /* @__PURE__ */ import_react17.default.createElement("tr", { key: c.key }, /* @__PURE__ */ import_react17.default.createElement("td", null, c.label), radioColumns))));
   }
 
   // src/Input/Rating.tsx
@@ -35935,13 +35983,13 @@
           }
         );
       case "tel":
-        return /* @__PURE__ */ import_react22.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true });
+        return /* @__PURE__ */ import_react22.default.createElement("input", { type: "text", className: "form-control dummy-input", disabled: true, readOnly: true, value: "" });
       case "url":
-        return /* @__PURE__ */ import_react22.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true });
+        return /* @__PURE__ */ import_react22.default.createElement("input", { type: "text", className: "form-control dummy-input", disabled: true, readOnly: true, value: "" });
       case "email":
-        return /* @__PURE__ */ import_react22.default.createElement("input", { type: "email", className: "form-control dummy-input", readOnly: true });
+        return /* @__PURE__ */ import_react22.default.createElement("input", { type: "email", className: "form-control dummy-input", disabled: true, readOnly: true, value: "" });
       case "text":
-        return /* @__PURE__ */ import_react22.default.createElement("input", { type: "text", className: "form-control dummy-input", readOnly: true, placeholder: "Short answer" });
+        return /* @__PURE__ */ import_react22.default.createElement("input", { type: "text", className: "form-control dummy-input", disabled: true, readOnly: true, value: "", placeholder: "Short answer" });
       case "textarea":
         return /* @__PURE__ */ import_react22.default.createElement("textarea", { className: "form-control dummy-input", readOnly: true, placeholder: "Paragraph" });
       case "file":
@@ -35967,10 +36015,9 @@
     }
     return null;
   }
-  var input_key = 0;
   function emptyInput() {
     return {
-      key: `INPUT_${input_key++}`,
+      key: v4_default(),
       label: "",
       type: "text",
       isConditional: false,
@@ -36011,7 +36058,7 @@
   function duplicateInput(input) {
     return {
       ...input,
-      key: `INPUT_${input_key++}`
+      key: v4_default()
     };
   }
 
@@ -36152,10 +36199,9 @@
       ))
     );
   }
-  var section_key = 0;
   function emptySection() {
     return {
-      key: `SECTION_${section_key++}`,
+      key: v4_default(),
       title: "",
       inputs: [emptyInput()]
     };
@@ -36163,12 +36209,12 @@
   function duplicateSection(section) {
     return {
       ...section,
-      key: `SECTION_${section_key++}`
+      key: v4_default()
     };
   }
   function mergeSections(a, b) {
     return {
-      key: `SECTION_${section_key++}`,
+      key: v4_default(),
       title: a.title,
       inputs: a.inputs.concat(b.inputs)
     };
@@ -36250,10 +36296,9 @@
     };
     return /* @__PURE__ */ import_react26.default.createElement(ConnectedDroppable, { droppableId: page.key, type: "SECTION" }, renderSections);
   }
-  var page_key = 0;
   function emptyPage() {
     return {
-      key: `PAGE_${page_key++}`,
+      key: v4_default(),
       sections: [emptySection()]
     };
   }
@@ -36655,10 +36700,911 @@
     return splice(arr, index3, arr.length - index3, item);
   }
 
+  // gh-pages/example01.json
+  var example01_default = [
+    {
+      key: "8b6e575a-7d15-4106-ac58-b1c401adfe40",
+      sections: [
+        {
+          key: "0119ba75-d209-44cb-a41c-1d59c4a45b1a",
+          title: "Product Feedback Survey",
+          inputs: [
+            {
+              key: "10bb0a1a-190b-4da0-b436-9e49a935f5e4",
+              label: "What product are you reviewing?",
+              type: "text",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "23a3625c-0236-4f9d-a367-90a5a19d3995",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "a5501b8b-e343-4ca1-81e5-1bbe3c03c519",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "9c15c483-126b-4032-b6af-e09e318c5535",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "f34ccd5d-229f-48b3-b76a-6a7da8d7b88e",
+              label: "Product website (if known):",
+              type: "url",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "aa07b010-825c-41e2-bcf5-7355849f00ba",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "bee9f852-f950-4d22-9eeb-28d28d617bbd",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "151d173e-d0d8-473a-b60b-bda6be8af35a",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      key: "0f265a7b-352e-43e4-8cb5-21e97790f184",
+      sections: [
+        {
+          key: "7d7ba240-7aec-4714-82c3-af69eb153680",
+          title: "Product Feedback Survey",
+          inputs: [
+            {
+              key: "86a30a82-2eb1-4a24-bd15-5308d107bfb7",
+              label: "Please provide detailed feedback about the product:",
+              type: "textarea",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "61074243-3e19-43d5-8db0-3526abaff473",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "d2723e02-0cd2-4d4c-8bcf-165e932a20a6",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "d8a70c66-4cff-4d0f-8a1f-3015dde0ea9e",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "5372bf9a-9ec3-4a68-a3a6-16962b303a1b",
+              label: "How often do you use this product?",
+              type: "radio",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "c19fb45b-cdae-474b-a63c-f2be32ac53f4",
+                  label: "Daily"
+                },
+                {
+                  key: "eaa0dd1e-ad10-412d-a67c-03011920ca7f",
+                  label: "Weekly"
+                },
+                {
+                  key: "708d3047-8a18-4db5-9661-3cc3b58c339f",
+                  label: "Monthly"
+                },
+                {
+                  key: "8c2d9210-85ba-4bab-876e-389e6afeb727",
+                  label: "Rarely"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "9b4180bc-9a68-4945-a05a-897fcb78f040",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "da708311-d515-47df-a331-720811c8d284",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "055015db-cc3a-408a-b5b5-523eeb6f2e94",
+              label: "What features do you use most?",
+              type: "checkbox",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "e53cf9be-19b7-4695-8546-636d7c0e1037",
+                  label: "Feature 1"
+                },
+                {
+                  key: "006d15f8-dd67-4dda-9d72-04ae16f74dff",
+                  label: "Feature 2"
+                },
+                {
+                  key: "c5d31637-e691-4ecc-b20f-451637cd43af",
+                  label: "Feature 3"
+                },
+                {
+                  key: "e6e98fc6-ced6-496f-a4d8-224885feda1e",
+                  label: "Feature 4"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "3ccc903b-5b9e-4d34-8085-736068e74027",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "5d7b5e5e-f46e-4f61-a7d2-b36eee1c223e",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "0737f020-7974-47c7-ac96-8d8ddd23bc8e",
+              label: "What area needs the most improvement?",
+              type: "select",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "5da2cb82-70db-4442-9c5e-ae96c5c16525",
+                  label: "Usability"
+                },
+                {
+                  key: "10b53952-bd5b-4777-8867-49f7066781a1",
+                  label: "Performance"
+                },
+                {
+                  key: "7eb1e22e-b576-420c-9de9-92e541c9e94b",
+                  label: "Features"
+                },
+                {
+                  key: "25f7cb83-4744-4899-902a-316f138d7e66",
+                  label: "Reliability"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "48a0dc25-bafc-43ac-8491-a827ab327651",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "f05b4d85-9c4e-47ec-8051-29509e89da39",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "7411d3f1-4e90-453b-9ecd-50bebbb966e7",
+              label: "Upload a screenshot (if applicable):",
+              type: "file",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "d78c51aa-3c2f-41f9-b034-056307b8d99f",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "2mb",
+              acceptAll: false,
+              accept: [
+                "img"
+              ],
+              rows: [
+                {
+                  key: "ca936a84-f5d2-4853-954d-48e1be42b733",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "2bfe22dd-7621-4f11-a807-4a6f937c71a6",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "d3d6f4f4-a64e-4608-ab98-6b0470d51e8a",
+              label: "When did you purchase the product?",
+              type: "date",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "60937d75-7361-4d60-90b4-764013b5566f",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "a5b4a379-cfa8-4902-82ff-a266334f642c",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "f17c4492-7ea6-42d3-9c4f-6f10cf321838",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "8dbb1e07-929c-4940-914c-ed9efb1c416b",
+              label: "How many hours per week do you use the product?",
+              type: "number",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "77c2ab05-a7c1-4266-829f-e3d8667b88a4",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "74d6ec75-4833-4f4a-a317-f7299a7d6eb4",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "c95ebe23-0271-44dc-9e35-524094f05594",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "02683cad-8c9b-4195-851b-d334655ba579",
+              label: "How much would you be willing to pay for this product?",
+              type: "money",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "533d648d-c164-4151-a3bc-44c4cacc315e",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "089d85e2-aa0f-4830-bd70-94565d77e18a",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "ca94b523-af6a-4b31-9ac1-5c2aa701872b",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "52402e45-a071-4579-91a8-9f1314aba1b1",
+              label: "Please rate the following aspects of the product:",
+              type: "multi",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "0ff1d3fe-5c3a-4154-995b-5cc499536745",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "b2d65ee5-6d01-4406-bb17-443e843ea4e3",
+                  label: "Ease of Use"
+                },
+                {
+                  key: "44761437-6835-4d44-9348-6bf3e0ef94fe",
+                  label: "Reliability"
+                },
+                {
+                  key: "1b330e67-4d2e-447b-a1ae-689d3f6722b3",
+                  label: "Value for Money"
+                }
+              ],
+              columns: [
+                {
+                  key: "6263ff23-4a83-4542-a67f-c42f0ba3decc",
+                  label: "Poor"
+                },
+                {
+                  key: "27b689d6-925e-42e2-8f55-249b9671bd58",
+                  label: "Fair"
+                },
+                {
+                  key: "60335791-d75d-4bee-9b56-16339db5029a",
+                  label: "Good"
+                },
+                {
+                  key: "b51741ad-ed5d-4ff6-a3ab-6819b63da343",
+                  label: "Excellent"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "c95cd781-c00f-4cd7-838f-99ee7ca1dfcd",
+              label: "How likely are you to recommend this product to others?",
+              type: "rating",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "8b7e1984-6e83-4719-b224-877efb726366",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "2c26ded0-5f16-4b49-ab07-db2eec69fa61",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "533b5372-0860-404a-a87b-2b345fc9fc36",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "10"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            }
+          ]
+        },
+        {
+          key: "2fa61dfb-7b82-434a-9d7b-ed2db9f9fed4",
+          title: "Contact Info",
+          inputs: [
+            {
+              key: "b7e33022-5c03-41de-be57-535798d33373",
+              label: "Contact email for follow-up (optional):",
+              type: "email",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "19e36269-ea7f-432d-8321-75890167affc",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "abf324a2-0cfd-40b3-9f1e-a79d13aece8f",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "c408e87e-d58d-4564-90df-99e612bb012c",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            },
+            {
+              key: "e1bfd519-4ba4-4583-8168-f7554b1647a3",
+              label: "Contact phone for follow-up (optional):",
+              type: "tel",
+              isConditional: false,
+              condition: "",
+              required: false,
+              showPre: false,
+              pre: "",
+              showDescription: false,
+              help: "",
+              showPos: false,
+              pos: "",
+              shuffle: false,
+              options: [
+                {
+                  key: "923c3633-1768-4796-b5e4-90b4d11e88bc",
+                  label: "Option 1"
+                }
+              ],
+              size: 1,
+              maxsize: "",
+              acceptAll: true,
+              accept: [],
+              rows: [
+                {
+                  key: "6f4c8a7d-0505-4c35-baae-c9d792d5ed6e",
+                  label: "Row 1"
+                }
+              ],
+              columns: [
+                {
+                  key: "7a20ab66-4c74-4843-a979-a8efc38b2413",
+                  label: "Column 1"
+                }
+              ],
+              rating: {
+                worstLabel: "Bad",
+                bestLabel: "Good",
+                ratingFrom: "0",
+                ratingTo: "5"
+              },
+              validation: {
+                minlength: "",
+                maxlength: "",
+                min: "",
+                max: "",
+                pattern: ""
+              },
+              advanced: {
+                name: "",
+                nameSet: false,
+                placeholder: "",
+                title: "",
+                autocomplete: "",
+                spellcheck: ""
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ];
+
   // gh-pages/App.tsx
-  var emptyForm = [emptyPage()];
   function App2() {
-    const [pages, setPages, undo, redo] = useUndoRedo(emptyForm);
+    const [pages, setPages, undo, redo] = useUndoRedo(example01_default);
     (0, import_react29.useEffect)(function() {
       const handleKeyDown = (e) => {
         if (e.ctrlKey === true && e.key === "z") {
