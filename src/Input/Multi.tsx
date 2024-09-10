@@ -45,18 +45,18 @@ type MultiPreviewProps = {
 function MultiPreview (props: MultiPreviewProps): React.ReactNode {
   const { rows, columns } = props
 
-  const radioColumns = columns.map(() => <td><input type="radio" className="custom-control-input" readOnly tabIndex={-1}></input></td>)
+  const radioColumns = columns.map((c) => <td key={c.key}><input type="radio" className="custom-control-input" readOnly tabIndex={-1}></input></td>)
 
   return (
     <table className="multiple-choice-preview">
       <thead>
         <tr>
           <th></th>
-          { columns.map((c) => <th>{c.label}</th>) }
+          { columns.map((c) => <th key={c.key}>{c.label}</th>) }
         </tr>
       </thead>
       <tbody>
-          { rows.map((c) => <tr><td>{c.label}</td>{ radioColumns }</tr>) }
+          { rows.map((c) => <tr key={c.key}><td>{c.label}</td>{ radioColumns }</tr>) }
       </tbody>
     </table>
   )
