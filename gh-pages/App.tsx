@@ -3,13 +3,12 @@ import './index.css'
 import React, { useEffect } from 'react'
 import { createRoot } from 'react-dom/client';
 import FormBuilder from '../src/index'
-import { Page, emptyPage } from '../src/Page';
+import { Page } from '../src/Page';
 import useUndoRedo from '../src/UndoRedo'
-
-const emptyForm = [emptyPage()]
+import initialForm from './example01.json'
 
 export default function App() {
-  const [pages, setPages, undo, redo] = useUndoRedo<Page[]>(emptyForm)
+  const [pages, setPages, undo, redo] = useUndoRedo<Page[]>(initialForm)
 
   useEffect(function () {
     const handleKeyDown = (e: KeyboardEvent) => {
