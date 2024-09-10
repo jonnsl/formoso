@@ -250,13 +250,13 @@ function DummyInput (props: dummyInputProps): React.ReactNode {
       type={type}
       onChange={(options) => onChange({ ...value, options })} />
   case 'tel':
-    return <input type="text" className="form-control dummy-input" readOnly />
+    return <input type="text" className="form-control dummy-input" disabled readOnly value="" />
   case 'url':
-    return <input type="text" className="form-control dummy-input" readOnly />
+    return <input type="text" className="form-control dummy-input" disabled readOnly value="" />
   case 'email':
-    return <input type="email" className="form-control dummy-input" readOnly />
+    return <input type="email" className="form-control dummy-input" disabled readOnly value="" />
   case 'text':
-    return <input type="text" className="form-control dummy-input" readOnly placeholder="Short answer" />
+    return <input type="text" className="form-control dummy-input" disabled readOnly value="" placeholder="Short answer" />
   case 'textarea':
     return <textarea className="form-control dummy-input" readOnly placeholder="Paragraph" />
   case 'file':
