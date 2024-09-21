@@ -56,9 +56,9 @@ export default function Section(props: SectionProps): ReactNode {
         </div>
         <div className="section-overflow-menu">
           <OverflowMenu>
-            <MenuItem onClick={onDuplicate}>Duplicar</MenuItem>
-            { onRemove ? <MenuItem onClick={onRemove}>Excluir</MenuItem> : null }
-            { onMerge ? <MenuItem onClick={onMerge}>Mesclar com a seção acima</MenuItem> : null }
+            <MenuItem onClick={onDuplicate}>Duplicate</MenuItem>
+            { onRemove ? <MenuItem onClick={onRemove}>Delete</MenuItem> : null }
+            { onMerge ? <MenuItem onClick={onMerge}>Merge with section above</MenuItem> : null }
           </OverflowMenu>
         </div>
       </div>
